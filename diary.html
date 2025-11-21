@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>Diary - Mini Home</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      color: #fff;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont,
+        "Segoe UI", sans-serif;
+      background-color: #000;
+      background-image:
+        radial-gradient(#ff6ef6 1px, transparent 1px),
+        radial-gradient(#7df9ff 1px, transparent 1px),
+        radial-gradient(#fffc6e 1px, transparent 1px);
+      background-position: 0 0, 25px 25px, 12px 12px;
+      background-size: 50px 50px;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      max-width: 900px;
+      margin: 24px auto 60px;
+      padding: 0 12px;
+    }
+
+    /* 상단 네온 헤더 */
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      padding: 8px 16px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #ff2df3, #7dff5a, #3fe9ff);
+      box-shadow: 0 0 18px rgba(255, 255, 255, 0.3);
+    }
+
+    .logo {
+      font-size: 12px;
+      font-weight: 700;
+      text-shadow: 0 0 6px #000;
+    }
+
+    .nav {
+      display: flex;
+      gap: 12px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .nav a {
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid rgba(0, 0, 0, 0.6);
+    }
+
+    .nav a:hover {
+      background: rgba(0, 0, 0, 0.8);
+    }
+
+    .nav a.active {
+      background: #000;
+      border-color: #fffc6e;
+    }
+
+    /* 패널 공통 */
+    .panel {
+      background: rgba(0, 0, 0, 0.9);
+      border-radius: 12px;
+      border: 2px solid #b8ff3c;
+      box-shadow: 0 0 14px rgba(0, 0, 0, 0.8);
+      overflow: hidden;
+    }
+
+    .panel-header {
+      padding: 6px 12px;
+      font-size: 13px;
+      font-weight: 700;
+      background: #ff2df3;
+      border-bottom: 2px solid #b8ff3c;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .panel-header span.sub {
+      font-size: 11px;
+      font-weight: 400;
+    }
+
+    .panel-body {
+      padding: 14px 14px 18px;
+      font-size: 13px;
+    }
+
+    /* 작성 폼 */
+    .entry-form {
+      margin-bottom: 18px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      background: #111;
+      border: 1px dashed #fffc6e;
+    }
+
+    .entry-form-title {
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: #fffc6e;
+    }
+
+    .entry-form-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .entry-form-row input {
+      flex: 1;
+      padding: 6px 8px;
+      border-radius: 999px;
+      border: 1px solid #3c3c3c;
+      background: #000;
+      color: #fff;
+      font-size: 13px;
+    }
+
+    .entry-form textarea {
+      width: 100%;
+      min-height: 80px;
+      padding: 8px 10px;
+      border-radius: 8px;
+      border: 1px solid #3c3c3c;
+      background: #000;
+      color: #fff;
+      font-size: 13px;
+      resize: vertical;
+    }
+
+    .entry-form-actions {
+      margin-top: 8px;
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      font-size: 11px;
+      color: #aaa;
+      align-items: center;
+    }
+
+    .mood-tag {
+      padding: 2px 8px;
+      border-radius: 999px;
+      border: 1px solid #7df9ff;
+      font-size: 11px;
+    }
+
+    .btn-save {
+      padding: 5px 12px;
+      border-radius: 999px;
+      border: 1px solid #ff2df3;
+      background: #ff2df3;
+      color: #fff;
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    .btn-save:hover {
+      filter: brightness(1.05);
+    }
+
+    /* 다이어리 리스트 (타임라인 느낌) */
+    .entries {
+      position: relative;
+      padding-left: 24px;
+    }
+
+    .entries::before {
+      content: "";
+      position: absolute;
+      left: 8px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: linear-gradient(#fffc6e, #ff2df3);
+      opacity: 0.8;
+    }
+
+    .entry {
+      position: relative;
+      margin-bottom: 14px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      background: #111;
+      border: 1px solid #3c3c3c;
+    }
+
+    .entry::before {
+      content: "";
+      position: absolute;
+      left: -18px;
+      top: 14px;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      border: 2px solid #fffc6e;
+      background: #000;
+      box-shadow: 0 0 6px #fffc6e;
+    }
+
+    .entry-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 4px;
+    }
+
+    .entry-date {
+      font-size: 11px;
+      color: #fffc6e;
+    }
+
+    .entry-title {
+      font-weight: 700;
+      font-size: 13px;
+    }
+
+    .entry-mood {
+      font-size: 11px;
+      color: #7df9ff;
+    }
+
+    .entry-body {
+      font-size: 13px;
+      line-height: 1.6;
+      white-space: pre-wrap;
+      margin-top: 4px;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <!-- 상단 네온 헤더 -->
+    <header class="top-bar">
+      <div class="logo">★ MINI HOME ★</div>
+      <nav class="nav">
+        <a href="index.html">Home</a>
+        <a href="diary.html" class="active">Diary</a>
+        <a href="gallery.html">Gallery</a>
+        <a href="guestbook.html">Guestbook</a>
+      </nav>
+    </header>
+
+    <!-- Diary 패널 -->
+    <section class="panel">
+      <div class="panel-header">
+        <div>Diary</div>
+        <span class="sub">오늘의 TMI · 생각 기록장</span>
+      </div>
+      <div class="panel-body">
+        <!-- 새 글 작성 -->
+        <form class="entry-form" id="entryForm">
+          <div class="entry-form-title">새 글 쓰기</div>
+          <div class="entry-form-row">
+            <input type="text" id="entryTitle" placeholder="제목을 입력하세요" />
+          </div>
+          <textarea id="entryBody" placeholder="오늘 있었던 일, TMI, 감정 등을 적어보세요."></textarea>
+          <div class="entry-form-actions">
+            <span class="mood-tag" id="moodTag">Mood: ✨ chill</span>
+            <button type="submit" class="btn-save">글 남기기</button>
+          </div>
+        </form>
+
+        <!-- 다이어리 목록 -->
+        <div class="entries" id="entries">
+          <!-- 기본 샘플 글들 -->
+          <article class="entry">
+            <div class="entry-header">
+              <div>
+                <div class="entry-title">미니홈피를 만들어 보았다!!!</div>
+                <div class="entry-date">2025-11-20 · 23:11</div>
+              </div>
+              <div class="entry-mood">Mood: 🚀 hyper</div>
+            </div>
+            <div class="entry-body">
+나중에 애들한테 여기 글 쓰라 하고싶음
+아님 내 블로그로 쓰거나 ㅎㅎ
+            </div>
+          </article>
+
+          <article class="entry">
+            <div class="entry-header">
+              <div>
+                <div class="entry-title">공룡 피규어가 들어있는 과자를 샀당</div>
+                <div class="entry-date">2025-11-19 · 20:05</div>
+              </div>
+              <div class="entry-mood">Mood: 🎳 tired but happy</div>
+            </div>
+            <div class="entry-body">
+황당한점: 할인 금액 적혀있어서 샀는데 원가로 구매됨 뭐지... 사고나서 알았음 이번달 황당한일 1위 준다.
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const form = document.getElementById("entryForm");
+    const titleInput = document.getElementById("entryTitle");
+    const bodyInput = document.getElementById("entryBody");
+    const entries = document.getElementById("entries");
+    const moodTag = document.getElementById("moodTag");
+
+    // 랜덤 무드 태그용 문구
+    const moods = [
+      "✨ chill", "💿 playlist mode", "🌧 a bit moody",
+      "🎳 tired but happy", "💌 sentimental", "🚀 hyper"
+    ];
+
+    function pickRandomMood() {
+      const idx = Math.floor(Math.random() * moods.length);
+      return moods[idx];
+    }
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const title = titleInput.value.trim();
+      const body = bodyInput.value.trim();
+
+      if (!title && !body) {
+        alert("제목이나 내용을 적어 주세요!");
+        return;
+      }
+
+      const now = new Date();
+      const dateText =
+        now.getFullYear() +
+        "-" +
+        String(now.getMonth() + 1).padStart(2, "0") +
+        "-" +
+        String(now.getDate()).padStart(2, "0") +
+        " · " +
+        String(now.getHours()).padStart(2, "0") +
+        ":" +
+        String(now.getMinutes()).padStart(2, "0");
+
+      const moodText = pickRandomMood();
+
+      const article = document.createElement("article");
+      article.className = "entry";
+      article.innerHTML = `
+        <div class="entry-header">
+          <div>
+            <div class="entry-title">${title || "제목 없음"}</div>
+            <div class="entry-date">${dateText}</div>
+          </div>
+          <div class="entry-mood">Mood: ${moodText}</div>
+        </div>
+        <div class="entry-body">${body.replace(/\n/g, "<br>")}</div>
+      `;
+
+      // 새 글을 맨 위에 추가
+      entries.insertBefore(article, entries.firstChild);
+
+      // 입력창 초기화 + 무드 갱신
+      titleInput.value = "";
+      bodyInput.value = "";
+      moodTag.textContent = "Mood: " + pickRandomMood();
+    });
+
+    // 첫 화면 무드 태그 랜덤 세팅
+    moodTag.textContent = "Mood: " + pickRandomMood();
+  </script>
+</body>
+</html>
