@@ -6,12 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
+    * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       min-height: 100vh;
       background-color: #000;
@@ -32,7 +27,6 @@
       padding: 0 12px;
     }
 
-    /* 상단 네온 헤더 */
     .top-bar {
       display: flex;
       justify-content: space-between;
@@ -43,19 +37,9 @@
       background: linear-gradient(90deg, #ff2df3, #7dff5a, #3fe9ff);
       box-shadow: 0 0 18px rgba(255, 255, 255, 0.3);
     }
+    .logo { font-size: 12px; font-weight: 700; }
 
-    .logo {
-      font-size: 12px;
-      font-weight: 700;
-    }
-
-    .nav {
-      display: flex;
-      gap: 12px;
-      font-size: 12px;
-      font-weight: 600;
-    }
-
+    .nav { display: flex; gap: 12px; font-size: 12px; font-weight: 600; }
     .nav a {
       padding: 4px 10px;
       border-radius: 999px;
@@ -64,13 +48,8 @@
       text-decoration: none;
       color: #fff;
     }
+    .nav a.active { background: #000; border-color: #fffc6e; }
 
-    .nav a.active {
-      background: #000;
-      border-color: #fffc6e;
-    }
-
-    /* 게스트북 박스 */
     .chat-panel {
       background: rgba(0,0,0,0.8);
       border: 2px solid #b8ff3c;
@@ -78,7 +57,6 @@
       box-shadow: 0 0 14px rgba(0,0,0,0.8);
       padding: 14px;
     }
-
     .chat-title {
       font-size: 14px;
       font-weight: 700;
@@ -86,13 +64,11 @@
       text-shadow: 0 0 3px #fffc6e;
     }
 
-    /* 메시지 form */
     .entry-form {
       display: flex;
       gap: 10px;
       margin-bottom: 16px;
     }
-
     .entry-form input {
       flex: 1;
       padding: 8px 10px;
@@ -101,7 +77,6 @@
       background: #000;
       color: #fff;
     }
-
     .entry-form button {
       padding: 6px 14px;
       border-radius: 30px;
@@ -112,24 +87,20 @@
       font-size: 12px;
       font-weight: 600;
     }
+    .entry-form button:hover { filter: brightness(1.1); }
 
-    .entry-form button:hover {
-      filter: brightness(1.1);
-    }
-
-    /* 채팅 메시지 UI */
     .messages {
       display: flex;
       flex-direction: column;
       gap: 12px;
+      max-height: 400px;
+      overflow-y: auto;
     }
-
     .message {
       display: flex;
       align-items: flex-start;
       gap: 8px;
     }
-
     .avatar {
       width: 40px;
       height: 40px;
@@ -137,7 +108,6 @@
       object-fit: cover;
       border: 2px solid #fffc6e;
     }
-
     .bubble {
       background: linear-gradient(90deg, #ffe7a8, #fffad0);
       padding: 10px 14px;
@@ -148,7 +118,6 @@
       max-width: 300px;
       position: relative;
     }
-
     .bubble::after {
       content: "";
       position: absolute;
@@ -158,7 +127,6 @@
       border-style: solid;
       border-color: transparent #ffe7a8 transparent transparent;
     }
-
     .meta {
       font-size: 10px;
       color: #ccc;
@@ -167,10 +135,8 @@
     }
   </style>
 </head>
-
 <body>
   <div class="page">
-    <!-- 상단 네온 헤더 -->
     <header class="top-bar">
       <div class="logo">★ MINI HOME ★</div>
       <nav class="nav">
@@ -181,30 +147,59 @@
       </nav>
     </header>
 
-    <!-- 게스트북 패널 -->
     <section class="chat-panel">
       <div class="chat-title">📒 Guestbook · 방명록</div>
 
-      <!-- 입력 폼 -->
       <form class="entry-form" id="guestForm">
         <input type="text" id="guestText" placeholder="메시지를 입력하세요" />
         <button type="submit">작성</button>
       </form>
 
-      <!-- 메시지 목록 -->
-      <div class="messages" id="messages">
-        <!-- 자동 채워짐 -->
-      </div>
+      <div class="messages" id="messages"></div>
     </section>
   </div>
 
   <script>
     const form = document.getElementById("guestForm");
     const input = document.getElementById("guestText");
-    const messages = document.getElementById("messages");
+    const messagesEl = document.getElementById("messages");
 
-    // 게스트 기본 프로필 이미지
-    const avatarSrc = "guest_profile.png";
+    const AVATAR_SRC = "guest_profile.png"; // 공통 프로필 이미지
+    const STORAGE_KEY = "miniHome_guestbook_messages";
+
+    function loadMessages() {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return [];
+      try {
+        return JSON.parse(raw) || [];
+      } catch {
+        return [];
+      }
+    }
+
+    function saveMessages(list) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+    }
+
+    function renderMessages(list) {
+      messagesEl.innerHTML = "";
+      list.forEach((m) => {
+        const div = document.createElement("div");
+        div.className = "message";
+        div.innerHTML = `
+          <img src="${AVATAR_SRC}" class="avatar" />
+          <div>
+            <div class="bubble">${m.text}</div>
+            <div class="meta">${m.time}</div>
+          </div>
+        `;
+        messagesEl.appendChild(div);
+      });
+      messagesEl.scrollTop = messagesEl.scrollHeight;
+    }
+
+    let messagesData = loadMessages();
+    renderMessages(messagesData);
 
     form.addEventListener("submit", function (e) {
       e.preventDefault();
@@ -217,21 +212,13 @@
         ":" +
         String(now.getMinutes()).padStart(2, "0");
 
-      const msg = document.createElement("div");
-      msg.className = "message";
-      msg.innerHTML = `
-        <img src="${avatarSrc}" class="avatar" />
-        <div>
-          <div class="bubble">${text}</div>
-          <div class="meta">${time}</div>
-        </div>
-      `;
+      const newMsg = { text, time };
+      messagesData.push(newMsg);
+      saveMessages(messagesData);
+      renderMessages(messagesData);
 
-      messages.appendChild(msg);
       input.value = "";
-
-      // 자동 스크롤
-      messages.scrollTop = messages.scrollHeight;
+      input.focus();
     });
   </script>
 </body>
