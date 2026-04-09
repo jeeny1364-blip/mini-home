@@ -131,6 +131,7 @@
       cursor: pointer;
     }
     .btn-save:hover { filter: brightness(1.05); }
+    .btn-save:disabled { opacity: 0.5; cursor: not-allowed; }
 
     .entries { position: relative; padding-left: 24px; }
     .entries::before {
@@ -178,6 +179,12 @@
       white-space: pre-wrap;
       margin-top: 4px;
     }
+    .loading {
+      text-align: center;
+      font-size: 12px;
+      color: #666;
+      padding: 20px;
+    }
   </style>
 </head>
 <body>
@@ -199,7 +206,7 @@
       </div>
       <div class="panel-body">
         <!-- 새 글 쓰기 -->
-        <form class="entry-form" id="entryForm">
+        <div class="entry-form">
           <div class="entry-form-title">새 글 쓰기</div>
           <div class="entry-form-row">
             <input type="text" id="entryTitle" placeholder="제목을 입력하세요" />
@@ -207,24 +214,25 @@
           <textarea id="entryBody" placeholder="오늘 있었던 일, TMI, 감정 등을 적어보세요."></textarea>
           <div class="entry-form-actions">
             <span class="mood-tag" id="moodTag">Mood: ✨ chill</span>
-            <button type="submit" class="btn-save">글 남기기</button>
+            <button class="btn-save" id="saveBtn" onclick="submitEntry()">글 남기기</button>
           </div>
-        </form>
+        </div>
 
         <!-- 다이어리 목록 -->
-        <div class="entries" id="entries"></div>
+        <div class="entries" id="entries">
+          <div class="loading">불러오는 중...</div>
+        </div>
       </div>
     </section>
   </div>
 
+  <!-- Supabase SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
-    const form = document.getElementById("entryForm");
-    const titleInput = document.getElementById("entryTitle");
-    const bodyInput = document.getElementById("entryBody");
-    const entriesEl = document.getElementById("entries");
-    const moodTag = document.getElementById("moodTag");
-
-    const STORAGE_KEY = "miniHome_diary_entries";
+    const _supabase = supabase.createClient(
+      'https://wsfplnugfazrqylupjjb.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndzZnBsbnVnZmF6cnF5bHVwampiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU3MTMxMTYsImV4cCI6MjA5MTI4OTExNn0.Aa8nzxI182YgUWU3GoJ4kjiqq-nUeUfY7JxG27BlQYY'
+    );
 
     const moods = [
       "✨ chill", "💿 playlist mode", "🌧 a bit moody",
@@ -232,103 +240,90 @@
     ];
 
     function pickRandomMood() {
-      const idx = Math.floor(Math.random() * moods.length);
-      return moods[idx];
+      return moods[Math.floor(Math.random() * moods.length)];
     }
 
-    function loadEntries() {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (!raw) {
-        // 기본 샘플 2개
-        return [
-          {
-            title: "얘들아 여기 내 공간임",
-            body: "블로그 쓸 거니까 알았띠?",
-            dateText: "2025-11-20 · 23:11",
-            mood: "🚀 hyper"
-          },
-          {
-            title: "배불러잉",
-            body: "실수로 너무 많이 먹었떠염",
-            dateText: "2025-11-19 · 20:05",
-            mood: "🎳 tired but happy"
-          }
-        ];
-      }
-      try {
-        return JSON.parse(raw) || [];
-      } catch {
-        return [];
-      }
-    }
+    // 랜덤 무드 초기 설정
+    document.getElementById('moodTag').textContent = "Mood: " + pickRandomMood();
 
-    function saveEntries(entries) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
-    }
+    // 글 불러오기
+    async function loadEntries() {
+      const { data, error } = await _supabase
+        .from('diary')
+        .select('*')
+        .order('created_at', { ascending: false });
 
-    function renderEntries(entries) {
-      entriesEl.innerHTML = "";
-      entries.forEach((e) => {
-        const article = document.createElement("article");
-        article.className = "entry";
-        article.innerHTML = `
-          <div class="entry-header">
-            <div>
-              <div class="entry-title">${e.title}</div>
-              <div class="entry-date">${e.dateText}</div>
-            </div>
-            <div class="entry-mood">Mood: ${e.mood}</div>
-          </div>
-          <div class="entry-body">${e.body.replace(/\n/g, "<br>")}</div>
-        `;
-        entriesEl.appendChild(article);
-      });
-    }
+      const entriesEl = document.getElementById('entries');
 
-    let entriesData = loadEntries();
-    renderEntries(entriesData);
-    moodTag.textContent = "Mood: " + pickRandomMood();
-
-    form.addEventListener("submit", function (e) {
-      e.preventDefault();
-      const title = titleInput.value.trim() || "제목 없음";
-      const body = bodyInput.value.trim();
-      if (!body && !title) {
-        alert("제목이나 내용을 적어 주세요!");
+      if (error) {
+        entriesEl.innerHTML = '<div class="loading">불러오기 실패 😢</div>';
         return;
       }
 
-      const now = new Date();
-      const dateText =
-        now.getFullYear() +
-        "-" +
-        String(now.getMonth() + 1).padStart(2, "0") +
-        "-" +
-        String(now.getDate()).padStart(2, "0") +
-        " · " +
-        String(now.getHours()).padStart(2, "0") +
-        ":" +
-        String(now.getMinutes()).padStart(2, "0");
+      if (data.length === 0) {
+        entriesEl.innerHTML = '<div class="loading">아직 일기가 없어요. 첫 글을 써봐요! ✍️</div>';
+        return;
+      }
 
-      const moodText = pickRandomMood();
+      entriesEl.innerHTML = data.map(e => {
+        const date = new Date(e.created_at);
+        const dateText =
+          date.getFullYear() + '-' +
+          String(date.getMonth()+1).padStart(2,'0') + '-' +
+          String(date.getDate()).padStart(2,'0') + ' · ' +
+          String(date.getHours()).padStart(2,'0') + ':' +
+          String(date.getMinutes()).padStart(2,'0');
 
-      const newEntry = {
-        title,
-        body,
-        dateText,
-        mood: moodText
-      };
+        return `
+          <article class="entry">
+            <div class="entry-header">
+              <div>
+                <div class="entry-title">${escapeHtml(e.title)}</div>
+                <div class="entry-date">${dateText}</div>
+              </div>
+              <div class="entry-mood">Mood: ${escapeHtml(e.mood)}</div>
+            </div>
+            <div class="entry-body">${escapeHtml(e.content).replace(/\n/g, '<br>')}</div>
+          </article>
+        `;
+      }).join('');
+    }
 
-      // 새 글을 맨 위에 추가
-      entriesData.unshift(newEntry);
-      saveEntries(entriesData);
-      renderEntries(entriesData);
+    // 글 저장
+    async function submitEntry() {
+      const title = document.getElementById('entryTitle').value.trim() || '제목 없음';
+      const content = document.getElementById('entryBody').value.trim();
+      const mood = pickRandomMood();
+      const btn = document.getElementById('saveBtn');
 
-      titleInput.value = "";
-      bodyInput.value = "";
-      moodTag.textContent = "Mood: " + pickRandomMood();
-    });
+      if (!content) return alert('내용을 입력해줘요!');
+
+      btn.disabled = true;
+      btn.textContent = '저장 중...';
+
+      const { error } = await _supabase
+        .from('diary')
+        .insert({ title, content, mood });
+
+      if (error) {
+        alert('저장 실패 😢 다시 시도해줘요!');
+      } else {
+        document.getElementById('entryTitle').value = '';
+        document.getElementById('entryBody').value = '';
+        document.getElementById('moodTag').textContent = "Mood: " + pickRandomMood();
+        loadEntries();
+      }
+
+      btn.disabled = false;
+      btn.textContent = '글 남기기';
+    }
+
+    // XSS 방지
+    function escapeHtml(str) {
+      return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+
+    loadEntries();
   </script>
 </body>
 </html>
-

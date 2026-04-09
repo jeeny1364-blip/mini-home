@@ -66,17 +66,34 @@
 
     .entry-form {
       display: flex;
+<<<<<<< HEAD
       gap: 10px;
       margin-bottom: 16px;
     }
     .entry-form input {
       flex: 1;
+=======
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    .entry-form input {
+>>>>>>> f524965 (supabase 방명록 연동)
       padding: 8px 10px;
       border-radius: 20px;
       border: 1px solid #3c3c3c;
       background: #000;
       color: #fff;
     }
+<<<<<<< HEAD
+=======
+    .entry-form input::placeholder { color: #666; }
+    .form-row {
+      display: flex;
+      gap: 8px;
+    }
+    .form-row input { flex: 1; }
+>>>>>>> f524965 (supabase 방명록 연동)
     .entry-form button {
       padding: 6px 14px;
       border-radius: 30px;
@@ -86,8 +103,15 @@
       cursor: pointer;
       font-size: 12px;
       font-weight: 600;
+<<<<<<< HEAD
     }
     .entry-form button:hover { filter: brightness(1.1); }
+=======
+      white-space: nowrap;
+    }
+    .entry-form button:hover { filter: brightness(1.1); }
+    .entry-form button:disabled { opacity: 0.5; cursor: not-allowed; }
+>>>>>>> f524965 (supabase 방명록 연동)
 
     .messages {
       display: flex;
@@ -107,6 +131,10 @@
       border-radius: 8px;
       object-fit: cover;
       border: 2px solid #fffc6e;
+<<<<<<< HEAD
+=======
+      flex-shrink: 0;
+>>>>>>> f524965 (supabase 방명록 연동)
     }
     .bubble {
       background: linear-gradient(90deg, #ffe7a8, #fffad0);
@@ -127,12 +155,31 @@
       border-style: solid;
       border-color: transparent #ffe7a8 transparent transparent;
     }
+<<<<<<< HEAD
+=======
+    .bubble-name {
+      font-weight: 700;
+      font-size: 11px;
+      color: #ff2df3;
+      margin-bottom: 3px;
+    }
+>>>>>>> f524965 (supabase 방명록 연동)
     .meta {
       font-size: 10px;
       color: #ccc;
       margin-top: 2px;
       margin-left: 4px;
     }
+<<<<<<< HEAD
+=======
+
+    .loading {
+      text-align: center;
+      font-size: 12px;
+      color: #666;
+      padding: 20px;
+    }
+>>>>>>> f524965 (supabase 방명록 연동)
   </style>
 </head>
 <body>
@@ -150,6 +197,7 @@
     <section class="chat-panel">
       <div class="chat-title">📒 Guestbook · 방명록</div>
 
+<<<<<<< HEAD
       <form class="entry-form" id="guestForm">
         <input type="text" id="guestText" placeholder="메시지를 입력하세요" />
         <button type="submit">작성</button>
@@ -223,3 +271,109 @@
   </script>
 </body>
 </html>
+=======
+      <div class="entry-form">
+        <input type="text" id="guestName" placeholder="이름을 입력하세요" maxlength="20" />
+        <div class="form-row">
+          <input type="text" id="guestText" placeholder="메시지를 입력하세요" maxlength="200" />
+          <button id="submitBtn" onclick="submitComment()">작성</button>
+        </div>
+      </div>
+
+      <div class="messages" id="messages">
+        <div class="loading">불러오는 중...</div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Supabase SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const _supabase = supabase.createClient(
+      'https://wsfplnugfazrqylupjjb.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndzZnBsbnVnZmF6cnF5bHVwampiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU3MTMxMTYsImV4cCI6MjA5MTI4OTExNn0.Aa8nzxI182YgUWU3GoJ4kjiqq-nUeUfY7JxG27BlQYY'
+    );
+
+    const AVATAR_SRC = "guest_profile.png";
+
+    // 댓글 불러오기
+    async function loadComments() {
+      const { data, error } = await _supabase
+        .from('guestbook')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      const messagesEl = document.getElementById('messages');
+
+      if (error) {
+        messagesEl.innerHTML = '<div class="loading">불러오기 실패 😢</div>';
+        return;
+      }
+
+      if (data.length === 0) {
+        messagesEl.innerHTML = '<div class="loading">아직 방명록이 없어요. 첫 번째로 남겨봐요! 💌</div>';
+        return;
+      }
+
+      messagesEl.innerHTML = data.map(m => {
+        const date = new Date(m.created_at);
+        const time = String(date.getHours()).padStart(2,'0') + ':' + String(date.getMinutes()).padStart(2,'0');
+        return `
+          <div class="message">
+            <img src="${AVATAR_SRC}" class="avatar" onerror="this.src='profile.jpg'" />
+            <div>
+              <div class="bubble">
+                <div class="bubble-name">${escapeHtml(m.name)}</div>
+                ${escapeHtml(m.message)}
+              </div>
+              <div class="meta">${time}</div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // 댓글 저장
+    async function submitComment() {
+      const name = document.getElementById('guestName').value.trim();
+      const message = document.getElementById('guestText').value.trim();
+      const btn = document.getElementById('submitBtn');
+
+      if (!name) return alert('이름을 입력해줘요!');
+      if (!message) return alert('메시지를 입력해줘요!');
+
+      btn.disabled = true;
+      btn.textContent = '저장 중...';
+
+      const { error } = await _supabase
+        .from('guestbook')
+        .insert({ name, message });
+
+      if (error) {
+        alert('저장 실패 😢 다시 시도해줘요!');
+      } else {
+        document.getElementById('guestName').value = '';
+        document.getElementById('guestText').value = '';
+        loadComments();
+      }
+
+      btn.disabled = false;
+      btn.textContent = '작성';
+    }
+
+    // 엔터키로 제출
+    document.getElementById('guestText').addEventListener('keydown', e => {
+      if (e.key === 'Enter') submitComment();
+    });
+
+    // XSS 방지
+    function escapeHtml(str) {
+      return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+
+    // 페이지 로드시 댓글 불러오기
+    loadComments();
+  </script>
+</body>
+</html>
+>>>>>>> f524965 (supabase 방명록 연동)
