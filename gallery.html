@@ -6,17 +6,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
+    * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       min-height: 100vh;
       color: #fff;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont,
-        "Segoe UI", sans-serif;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       background-color: #000;
       background-image:
         radial-gradient(#ff6ef6 1px, transparent 1px),
@@ -25,19 +19,10 @@
       background-position: 0 0, 25px 25px, 12px 12px;
       background-size: 50px 50px;
     }
+    a { color: inherit; text-decoration: none; }
 
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
+    .page { max-width: 1200px; margin: 24px auto 60px; padding: 0 12px; }
 
-    .page {
-      max-width: 1200px;
-      margin: 24px auto 60px;
-      padding: 0 12px;
-    }
-
-    /* 상단 네온 헤더 */
     .top-bar {
       display: flex;
       justify-content: space-between;
@@ -46,92 +31,47 @@
       padding: 8px 16px;
       border-radius: 999px;
       background: linear-gradient(90deg, #ff2df3, #7dff5a, #3fe9ff);
-      box-shadow: 0 0 18px rgba(255, 255, 255, 0.3);
+      box-shadow: 0 0 18px rgba(255,255,255,0.3);
     }
-
-    .logo {
-      font-size: 12px;
-      font-weight: 700;
-      text-shadow: 0 0 6px #000;
-    }
-
-    .nav {
-      display: flex;
-      gap: 12px;
-      font-size: 13px;
-      font-weight: 600;
-    }
-
+    .logo { font-size: 12px; font-weight: 700; text-shadow: 0 0 6px #000; }
+    .nav { display: flex; gap: 12px; font-size: 13px; font-weight: 600; }
     .nav a {
       padding: 4px 10px;
       border-radius: 999px;
-      background: rgba(0, 0, 0, 0.35);
-      border: 1px solid rgba(0, 0, 0, 0.6);
+      background: rgba(0,0,0,0.35);
+      border: 1px solid rgba(0,0,0,0.6);
     }
+    .nav a:hover { background: rgba(0,0,0,0.8); }
+    .nav a.active { background: #000; border-color: #fffc6e; }
 
-    .nav a:hover {
-      background: rgba(0, 0, 0, 0.8);
-    }
-
-    /* 지금 페이지(Gallery) 강조 */
-    .nav a.active {
-      background: #000;
-      border-color: #fffc6e;
-    }
-
-    /* 메인 패널 */
     .panel {
-      background: rgba(0, 0, 0, 0.9);
+      background: rgba(0,0,0,0.9);
       border-radius: 10px;
       border: 2px solid #b8ff3c;
-      box-shadow: 0 0 14px rgba(0, 0, 0, 0.8);
+      box-shadow: 0 0 14px rgba(0,0,0,0.8);
       overflow: hidden;
     }
-
     .panel-header {
       padding: 6px 10px;
       font-size: 13px;
       font-weight: 700;
       background: #00c4ff;
       border-bottom: 2px solid #b8ff3c;
-      text-transform: uppercase;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 8px;
     }
+    .panel-header span.sub { font-size: 11px; font-weight: 400; opacity: 0.9; }
+    .panel-body { padding: 12px; font-size: 13px; }
 
-    .panel-header span.sub {
-      font-size: 11px;
-      font-weight: 400;
-      opacity: 0.9;
-    }
-
-    .panel-body {
-      padding: 12px;
-      font-size: 13px;
-    }
-
-    /* 레이아웃: 왼쪽 폴더, 오른쪽 내용 */
     .gallery-layout {
       display: grid;
       grid-template-columns: 230px minmax(0, 1fr);
       gap: 16px;
     }
+    @media (max-width: 900px) { .gallery-layout { grid-template-columns: 1fr; } }
 
-    @media (max-width: 900px) {
-      .gallery-layout {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    /* 폴더 리스트 */
-    .folder-list {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
+    .folder-list { display: flex; flex-direction: column; gap: 8px; }
     .folder-item {
       display: flex;
       align-items: center;
@@ -142,112 +82,119 @@
       border: 1px solid #3c3c3c;
       cursor: pointer;
     }
+    .folder-item:hover { border-color: #fffc6e; background: #181818; }
+    .folder-item.active { border-color: #b8ff3c; background: #202020; }
+    .folder-name { font-weight: 600; font-size: 13px; }
+    .folder-name span.sub { font-size: 11px; color: #aaa; margin-left: 4px; }
+    .folder-count { font-size: 11px; color: #bbb; }
 
-    .folder-item:hover {
-      border-color: #fffc6e;
-      background: #181818;
+    /* 업로드 버튼 */
+    .upload-area {
+      margin-top: 12px;
+      padding: 10px;
+      border-radius: 8px;
+      background: #111;
+      border: 1px dashed #ff2df3;
     }
-
-    .folder-item.active {
-      border-color: #b8ff3c;
-      background: #202020;
+    .upload-area.hidden { display: none; }
+    .upload-title { font-size: 11px; color: #ff2df3; font-weight: 700; margin-bottom: 8px; }
+    .folder-select {
+      width: 100%;
+      padding: 5px 8px;
+      border-radius: 6px;
+      border: 1px solid #3c3c3c;
+      background: #000;
+      color: #fff;
+      font-size: 12px;
+      margin-bottom: 6px;
     }
-
-    .folder-name {
+    .upload-btn {
+      width: 100%;
+      padding: 6px;
+      border-radius: 6px;
+      background: #ff2df3;
+      border: none;
+      color: #fff;
+      font-size: 12px;
+      cursor: pointer;
       font-weight: 600;
-      font-size: 13px;
     }
+    .upload-btn:hover { filter: brightness(1.1); }
+    .upload-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
-    .folder-name span.sub {
+    /* 어드민 로그인 */
+    .admin-toggle {
+      margin-top: 8px;
       font-size: 11px;
-      color: #aaa;
-      margin-left: 4px;
+      color: #666;
+      cursor: pointer;
+      text-align: center;
+    }
+    .admin-toggle:hover { color: #aaa; }
+    .admin-login { margin-top: 8px; display: none; }
+    .admin-login input {
+      width: 100%;
+      padding: 5px 8px;
+      border-radius: 6px;
+      border: 1px solid #3c3c3c;
+      background: #000;
+      color: #fff;
+      font-size: 12px;
+      margin-bottom: 6px;
+    }
+    .admin-login button {
+      width: 100%;
+      padding: 5px;
+      border-radius: 6px;
+      background: #333;
+      border: 1px solid #666;
+      color: #fff;
+      font-size: 12px;
+      cursor: pointer;
     }
 
-    .folder-count {
-      font-size: 11px;
-      color: #bbb;
-    }
-
-    /* 오른쪽 영역 공통 */
-    .right-area {
-      min-height: 260px;
-    }
-
-    /* 앨범 선택 뷰 (첫 화면) */
-    #albumView {
-      display: block;
-    }
-
+    /* 이미지 그리드 */
+    .right-area { min-height: 260px; }
+    #albumView { display: block; }
     .album-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
       gap: 12px;
     }
-
     .album-card {
       border-radius: 10px;
       background: #111;
       border: 1px solid #3c3c3c;
       padding: 10px;
       cursor: pointer;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
     }
-
-    .album-card:hover {
-      border-color: #fffc6e;
-      background: #181818;
-    }
-
+    .album-card:hover { border-color: #fffc6e; background: #181818; }
     .album-thumb {
       width: 100%;
       border-radius: 6px;
-      aspect-ratio: 4 / 3;
+      aspect-ratio: 4/3;
       object-fit: cover;
       border: 1px solid #b8ff3c;
       margin-bottom: 4px;
+      background: #222;
     }
+    .album-title { font-weight: 600; font-size: 13px; }
+    .album-sub { font-size: 11px; color: #aaa; }
 
-    .album-title {
-      font-weight: 600;
-      font-size: 13px;
-    }
-
-    .album-sub {
-      font-size: 11px;
-      color: #aaa;
-    }
-
-    /* 그리드 갤러리 뷰 */
-    #gridView {
-      display: none;
-      display: none;
-      flex-direction: column;
-      gap: 12px;
-    }
-
+    #gridView { display: none; flex-direction: column; gap: 12px; }
     .grid-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 8px;
       margin-bottom: 4px;
     }
-
-    .grid-title {
-      font-weight: 700;
-      font-size: 14px;
-    }
-
+    .grid-title { font-weight: 700; font-size: 14px; }
     .grid-badge {
       font-size: 11px;
       padding: 2px 8px;
       border-radius: 999px;
       background: #ff2df3;
     }
-
     .grid-back-btn {
       padding: 4px 10px;
       border-radius: 999px;
@@ -257,43 +204,49 @@
       font-size: 11px;
       cursor: pointer;
     }
-
-    .grid-back-btn:hover {
-      background: #111;
-    }
-
     .image-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
       gap: 10px;
     }
-
     .image-item {
       border-radius: 8px;
       overflow: hidden;
       border: 1px solid #3c3c3c;
       background: #111;
+      position: relative;
     }
-
     .image-item img {
       width: 100%;
-      height: 100%;
-      display: block;
-      aspect-ratio: 4 / 3;
+      aspect-ratio: 4/3;
       object-fit: cover;
+      display: block;
     }
-
-    .image-caption {
-      font-size: 11px;
-      padding: 4px 6px;
-      color: #ccc;
+    .image-caption { font-size: 11px; padding: 4px 6px; color: #ccc; }
+    .delete-btn {
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      background: rgba(0,0,0,0.7);
+      border: none;
+      color: #ff4444;
+      font-size: 14px;
+      border-radius: 50%;
+      width: 22px;
+      height: 22px;
+      cursor: pointer;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
     }
+    .admin-mode .delete-btn { display: flex; }
 
+    .loading { text-align: center; font-size: 12px; color: #666; padding: 40px; }
   </style>
 </head>
 <body>
   <div class="page">
-    <!-- 상단 네온 헤더 -->
     <header class="top-bar">
       <div class="logo">★ MINI HOME ★</div>
       <nav class="nav">
@@ -304,7 +257,6 @@
       </nav>
     </header>
 
-    <!-- 갤러리 패널 -->
     <section class="panel">
       <div class="panel-header">
         <div>Gallery</div>
@@ -312,66 +264,73 @@
       </div>
       <div class="panel-body">
         <div class="gallery-layout">
-          <!-- 왼쪽: 폴더 리스트 -->
+          <!-- 왼쪽 -->
           <aside>
             <div class="folder-list">
               <div class="folder-item active" data-folder="all">
-                <div class="folder-name">
-                  All <span class="sub">전체</span>
-                </div>
-                <div class="folder-count">12 pics</div>
+                <div class="folder-name">All <span class="sub">전체</span></div>
+                <div class="folder-count" id="count-all">-</div>
               </div>
-              <div class="folder-item" data-folder="fav">
-                <div class="folder-name">
-                  Favorite <span class="sub">즐겨찾기</span>
-                </div>
-                <div class="folder-count">8 pics</div>
+              <div class="folder-item" data-folder="favorite">
+                <div class="folder-name">Favorite <span class="sub">즐겨찾기</span></div>
+                <div class="folder-count" id="count-favorite">-</div>
               </div>
-              <div class="folder-item" data-folder="down">
-                <div class="folder-name">
-                  Download <span class="sub">다운로드</span>
-                </div>
-                <div class="folder-count">6 pics</div>
+              <div class="folder-item" data-folder="me">
+                <div class="folder-name">Me <span class="sub">나</span></div>
+                <div class="folder-count" id="count-me">-</div>
               </div>
+            </div>
+
+            <!-- 어드민 업로드 영역 -->
+            <div class="admin-toggle" onclick="toggleAdminLogin()">🔒 관리자</div>
+            <div class="admin-login" id="adminLogin">
+              <input type="password" id="adminPw" placeholder="비밀번호" />
+              <button onclick="checkAdmin()">확인</button>
+            </div>
+            <div class="upload-area hidden" id="uploadArea">
+              <div class="upload-title">📸 사진 업로드</div>
+              <select class="folder-select" id="uploadFolder">
+                <option value="all">All</option>
+                <option value="favorite">Favorite</option>
+                <option value="me">Me</option>
+              </select>
+              <input type="file" id="fileInput" accept="image/*" multiple style="display:none" />
+              <button class="upload-btn" onclick="document.getElementById('fileInput').click()">사진 선택</button>
+              <div id="uploadStatus" style="font-size:11px;color:#aaa;margin-top:4px;"></div>
             </div>
           </aside>
 
-          <!-- 오른쪽: 내용 영역 -->
-          <div class="right-area">
-            <!-- 1) 앨범 선택 화면 -->
+          <!-- 오른쪽 -->
+          <div class="right-area" id="rightArea">
             <div id="albumView">
               <div class="album-grid">
                 <div class="album-card" data-folder="all">
-                  <img src="g_all1.jpg" alt="All" class="album-thumb" />
+                  <div class="album-thumb" id="thumb-all" style="background:#222;"></div>
                   <div class="album-title">All</div>
                   <div class="album-sub">전체 사진 모음</div>
                 </div>
-                <div class="album-card" data-folder="fav">
-                  <img src="g_fav1.jpg" alt="Favorite" class="album-thumb" />
+                <div class="album-card" data-folder="favorite">
+                  <div class="album-thumb" id="thumb-favorite" style="background:#222;"></div>
                   <div class="album-title">Favorite</div>
                   <div class="album-sub">내 최애컷만 모았어 💖</div>
                 </div>
-                <div class="album-card" data-folder="down">
-                  <img src="g_down1.jpg" alt="Download" class="album-thumb" />
-                  <div class="album-title">Download</div>
-                  <div class="album-sub">저장해 둔 짤/사진</div>
+                <div class="album-card" data-folder="me">
+                  <div class="album-thumb" id="thumb-me" style="background:#222;"></div>
+                  <div class="album-title">Me</div>
+                  <div class="album-sub">나 💁‍♀️</div>
                 </div>
               </div>
             </div>
 
-            <!-- 2) 그리드 갤러리 화면 -->
             <div id="gridView">
               <div class="grid-header">
                 <div>
                   <div class="grid-title" id="gridTitle">All · 전체</div>
-                  <div class="grid-badge" id="gridBadge">12 pics</div>
+                  <div class="grid-badge" id="gridBadge">0 pics</div>
                 </div>
-                <button class="grid-back-btn" id="backBtn">← Back to folders</button>
+                <button class="grid-back-btn" id="backBtn">← Back</button>
               </div>
-
-              <div class="image-grid" id="imageGrid">
-                <!-- JS에서 폴더에 따라 이미지 채워 넣음 -->
-              </div>
+              <div class="image-grid" id="imageGrid"></div>
             </div>
           </div>
         </div>
@@ -379,117 +338,170 @@
     </section>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
-    // 폴더별 이미지 데이터
-    const galleryData = {
-      all: {
-        title: "All · 전체",
-        count: "12 pics",
-        images: [
-          { src: "g_all1.jpg", caption: "All 1" },
-          { src: "g_all2.jpg", caption: "All 2" },
-          { src: "g_all3.jpg", caption: "All 3" },
-          { src: "g_all4.jpg", caption: "All 4" },
-          { src: "g_fav1.jpg", caption: "Fav 1" },
-          { src: "g_fav2.jpg", caption: "Fav 2" },
-          { src: "g_fav3.jpg", caption: "Fav 3" },
-          { src: "g_fav4.jpg", caption: "Fav 4" },
-          { src: "g_down1.jpg", caption: "Down 1" },
-          { src: "g_down2.jpg", caption: "Down 2" },
-          { src: "g_down3.jpg", caption: "Down 3" },
-          { src: "g_down4.jpg", caption: "Down 4" }
-        ]
-      },
-      fav: {
-        title: "Favorite · 즐겨찾기",
-        count: "8 pics",
-        images: [
-          { src: "g_fav1.jpg", caption: "Fav 1" },
-          { src: "g_fav2.jpg", caption: "Fav 2" },
-          { src: "g_fav3.jpg", caption: "Fav 3" },
-          { src: "g_fav4.jpg", caption: "Fav 4" },
-          { src: "g_all1.jpg", caption: "All 1" },
-          { src: "g_all2.jpg", caption: "All 2" },
-          { src: "g_down1.jpg", caption: "Down 1" },
-          { src: "g_down2.jpg", caption: "Down 2" }
-        ]
-      },
-      down: {
-        title: "Download · 다운로드",
-        count: "6 pics",
-        images: [
-          { src: "g_down1.jpg", caption: "Down 1" },
-          { src: "g_down2.jpg", caption: "Down 2" },
-          { src: "g_down3.jpg", caption: "Down 3" },
-          { src: "g_down4.jpg", caption: "Down 4" },
-          { src: "g_all3.jpg", caption: "All 3" },
-          { src: "g_all4.jpg", caption: "All 4" }
-        ]
+    const _supabase = supabase.createClient(
+      'https://wsfplnugfazrqylupjjb.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndzZnBsbnVnZmF6cnF5bHVwampiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU3MTMxMTYsImV4cCI6MjA5MTI4OTExNn0.Aa8nzxI182YgUWU3GoJ4kjiqq-nUeUfY7JxG27BlQYY'
+    );
+
+    // ⚠️ 여기에 비밀번호 입력하세요!
+    const ADMIN_PASSWORD = '013000';
+
+    const BUCKET = 'gallery';
+    const FOLDERS = { all: 'All · 전체', favorite: 'Favorite · 즐겨찾기', me: 'Me · 나' };
+
+    let isAdmin = false;
+    let currentFolder = null;
+    let folderImages = { all: [], favorite: [], me: [] };
+
+    // 모든 폴더 이미지 미리 로드
+    async function loadAllFolders() {
+      for (const folder of Object.keys(FOLDERS)) {
+        const imgs = await loadFolder(folder);
+        folderImages[folder] = imgs;
+        document.getElementById('count-' + folder).textContent = imgs.length + ' pics';
+
+        // 썸네일 설정
+        if (imgs.length > 0) {
+          const thumb = document.getElementById('thumb-' + folder);
+          if (thumb) {
+            thumb.style.backgroundImage = `url(${imgs[0].url})`;
+            thumb.style.backgroundSize = 'cover';
+            thumb.style.backgroundPosition = 'center';
+          }
+        }
       }
-    };
+    }
 
-    const folderItems = document.querySelectorAll(".folder-item");
-    const albumCards = document.querySelectorAll(".album-card");
-    const albumView = document.getElementById("albumView");
-    const gridView = document.getElementById("gridView");
-    const imageGrid = document.getElementById("imageGrid");
-    const gridTitle = document.getElementById("gridTitle");
-    const gridBadge = document.getElementById("gridBadge");
-    const backBtn = document.getElementById("backBtn");
+    async function loadFolder(folder) {
+      const { data, error } = await _supabase.storage
+        .from(BUCKET)
+        .list(folder, { sortBy: { column: 'created_at', order: 'desc' } });
 
-    function setActiveFolder(folderKey) {
-      folderItems.forEach((item) => {
-        item.classList.toggle("active", item.dataset.folder === folderKey);
-      });
+      if (error || !data) return [];
+
+      return data
+        .filter(f => f.name !== '.emptyFolderPlaceholder')
+        .map(f => {
+          const { data: urlData } = _supabase.storage
+            .from(BUCKET)
+            .getPublicUrl(`${folder}/${f.name}`);
+          return { name: f.name, url: urlData.publicUrl, path: `${folder}/${f.name}` };
+        });
     }
 
     function openGrid(folderKey) {
-      const data = galleryData[folderKey];
+      const imgs = folderImages[folderKey];
+      currentFolder = folderKey;
 
-      if (!data) return;
+      document.getElementById('gridTitle').textContent = FOLDERS[folderKey];
+      document.getElementById('gridBadge').textContent = imgs.length + ' pics';
 
-      // 제목/카운트 세팅
-      gridTitle.textContent = data.title;
-      gridBadge.textContent = data.count;
+      const grid = document.getElementById('imageGrid');
+      if (imgs.length === 0) {
+        grid.innerHTML = '<div class="loading">사진이 없어요 📷</div>';
+      } else {
+        grid.innerHTML = imgs.map(img => `
+          <div class="image-item">
+            <img src="${img.url}" alt="${img.name}" loading="lazy">
+            <div class="image-caption">${img.name}</div>
+            <button class="delete-btn" onclick="deleteImage('${img.path}', '${folderKey}')">✕</button>
+          </div>
+        `).join('');
+      }
 
-      // 이미지 그리기
-      imageGrid.innerHTML = "";
-      data.images.forEach((img) => {
-        const div = document.createElement("div");
-        div.className = "image-item";
-        div.innerHTML = `
-          <img src="${img.src}" alt="${img.caption}">
-          <div class="image-caption">${img.caption}</div>
-        `;
-        imageGrid.appendChild(div);
+      if (isAdmin) grid.parentElement.parentElement.classList.add('admin-mode');
+
+      document.getElementById('albumView').style.display = 'none';
+      document.getElementById('gridView').style.display = 'flex';
+
+      document.querySelectorAll('.folder-item').forEach(el => {
+        el.classList.toggle('active', el.dataset.folder === folderKey);
       });
-
-      albumView.style.display = "none";
-      gridView.style.display = "flex";
-      setActiveFolder(folderKey);
     }
 
-    // 폴더 리스트 클릭
-    folderItems.forEach((item) => {
-      item.addEventListener("click", () => {
-        const folderKey = item.dataset.folder;
-        openGrid(folderKey);
-      });
+    // 폴더/앨범 카드 클릭
+    document.querySelectorAll('.folder-item').forEach(el => {
+      el.addEventListener('click', () => openGrid(el.dataset.folder));
+    });
+    document.querySelectorAll('.album-card').forEach(el => {
+      el.addEventListener('click', () => openGrid(el.dataset.folder));
     });
 
-    // 앨범 카드 클릭 (오른쪽 썸네일)
-    albumCards.forEach((card) => {
-      card.addEventListener("click", () => {
-        const folderKey = card.dataset.folder;
-        openGrid(folderKey);
-      });
+    // 뒤로가기
+    document.getElementById('backBtn').addEventListener('click', () => {
+      document.getElementById('gridView').style.display = 'none';
+      document.getElementById('albumView').style.display = 'block';
+      currentFolder = null;
     });
 
-    // Back 버튼 → 폴더 선택 화면으로
-    backBtn.addEventListener("click", () => {
-      gridView.style.display = "none";
-      albumView.style.display = "block";
+    // 어드민 토글
+    function toggleAdminLogin() {
+      const el = document.getElementById('adminLogin');
+      el.style.display = el.style.display === 'block' ? 'none' : 'block';
+    }
+
+    function checkAdmin() {
+      const pw = document.getElementById('adminPw').value;
+      if (pw === ADMIN_PASSWORD) {
+        isAdmin = true;
+        document.getElementById('adminLogin').style.display = 'none';
+        document.getElementById('uploadArea').classList.remove('hidden');
+        document.querySelector('.admin-toggle').textContent = '✅ 관리자 모드';
+        document.querySelector('.right-area').classList.add('admin-mode');
+      } else {
+        alert('비밀번호가 틀렸어요!');
+      }
+    }
+
+    // 파일 업로드
+    document.getElementById('fileInput').addEventListener('change', async (e) => {
+      const files = Array.from(e.target.files);
+      if (!files.length) return;
+
+      const folder = document.getElementById('uploadFolder').value;
+      const status = document.getElementById('uploadStatus');
+      const btn = document.querySelector('.upload-btn');
+
+      btn.disabled = true;
+      status.textContent = `업로드 중... (0/${files.length})`;
+
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        const fileName = Date.now() + '_' + file.name;
+        const { error } = await _supabase.storage
+          .from(BUCKET)
+          .upload(`${folder}/${fileName}`, file);
+
+        if (error) {
+          status.textContent = `❌ ${file.name} 업로드 실패`;
+        } else {
+          status.textContent = `업로드 중... (${i+1}/${files.length})`;
+        }
+      }
+
+      status.textContent = '✅ 업로드 완료!';
+      btn.disabled = false;
+      e.target.value = '';
+
+      // 해당 폴더 새로고침
+      folderImages[folder] = await loadFolder(folder);
+      document.getElementById('count-' + folder).textContent = folderImages[folder].length + ' pics';
+      if (currentFolder === folder) openGrid(folder);
     });
+
+    // 사진 삭제
+    async function deleteImage(path, folder) {
+      if (!confirm('이 사진을 삭제할까요?')) return;
+      const { error } = await _supabase.storage.from(BUCKET).remove([path]);
+      if (error) { alert('삭제 실패 😢'); return; }
+      folderImages[folder] = await loadFolder(folder);
+      document.getElementById('count-' + folder).textContent = folderImages[folder].length + ' pics';
+      openGrid(folder);
+    }
+
+    loadAllFolders();
   </script>
 </body>
 </html>
