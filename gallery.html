@@ -406,7 +406,7 @@
           <div class="image-item">
             <img src="${img.url}" alt="${img.name}" loading="lazy">
             <div class="image-caption">${img.name}</div>
-            <button class="delete-btn" onclick="deleteImage('${img.path}', '${folderKey}')">✕</button>
+            <button class="delete-btn" style="display:${isAdmin ? 'flex' : 'none'}" onclick="deleteImage...
           </div>
         `).join('');
       }
