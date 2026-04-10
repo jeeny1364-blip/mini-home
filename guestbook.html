@@ -143,7 +143,7 @@
 
       const el = document.getElementById('messages');
       if (error) { el.innerHTML = '<div class="loading">불러오기 실패 😢</div>'; return; }
-      if (data.length === 0) { el.innerHTML = '<div class="loading">아직 방명록이 없어요. 첫 번째로 남겨봐요! 💌</div>'; return; }
+      if (data.length === 0) { el.innerHTML = '<div class="loading">아직 방명록이 없어요. 첫 번째로 남겨주세요!</div>'; return; }
 
       el.innerHTML = data.map(m => {
         const d = new Date(m.created_at);
