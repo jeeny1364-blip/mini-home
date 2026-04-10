@@ -171,7 +171,7 @@
                 <p class="about-quote">Ready to dance, always online ★</p>
                 <dl class="about-list">
                   <dt>Interests</dt>
-                  <dd>Bowling, making playlists, selfies</dd>
+                  <dd>making playlists, selfies</dd>
                   <dt>Currently</dt>
                   <dd>Waking up late, unnecessary drama</dd>
                   <dt>Mood</dt>
@@ -208,12 +208,12 @@
           <div class="panel-header green">Friends</div>
           <div class="panel-body">
             <div class="friends-grid">
-              <div class="friend"><img src="friend1.jpg" alt="friend1"><div>Lescol</div></div>
-              <div class="friend"><img src="friend2.jpg" alt="friend2"><div>Haum</div></div>
-              <div class="friend"><img src="friend3.jpg" alt="friend3"><div>Su</div></div>
-              <div class="friend"><img src="friend4.jpg" alt="friend4"><div>Kya</div></div>
-              <div class="friend"><img src="friend5.jpg" alt="friend5"><div>Twikiri</div></div>
-              <div class="friend"><img src="friend6.jpg" alt="friend6"><div>You</div></div>
+              <div class="friend"><img src="friend1.jpg" alt="friend1"><div>1</div></div>
+              <div class="friend"><img src="friend2.jpg" alt="friend2"><div>2</div></div>
+              <div class="friend"><img src="friend3.jpg" alt="friend3"><div>3</div></div>
+              <div class="friend"><img src="friend4.jpg" alt="friend4"><div>4</div></div>
+              <div class="friend"><img src="friend5.jpg" alt="friend5"><div>5</div></div>
+              <div class="friend"><img src="friend6.jpg" alt="friend6"><div>6</div></div>
             </div>
           </div>
         </div>
@@ -262,7 +262,7 @@
           <div class="panel">
             <div class="panel-header">Posts</div>
             <div class="panel-body">
-              <div class="posts-loading">아직 포스트가 없어요 📝</div>
+              <div class="posts-loading">작성된 포스트가 없어요.</div>
             </div>
           </div>`;
         return;
@@ -300,7 +300,7 @@
 
       const el = document.getElementById('recentDiary');
       if (error || !data || data.length === 0) {
-        el.innerHTML = '<div class="diary-empty">아직 일기가 없어요 ✍️</div>';
+        el.innerHTML = '<div class="diary-empty">작성된 일기가 없어요.</div>';
         return;
       }
 
