@@ -4,14 +4,12 @@
   <meta charset="UTF-8" />
   <title>Diary - Mini Home</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       min-height: 100vh;
       color: #fff;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont,
-        "Segoe UI", sans-serif;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       background-color: #000;
       background-image:
         radial-gradient(#ff6ef6 1px, transparent 1px),
@@ -21,39 +19,42 @@
       background-size: 50px 50px;
     }
     a { color: inherit; text-decoration: none; }
-
-    .page {
-      max-width: 900px;
-      margin: 24px auto 60px;
-      padding: 0 12px;
-    }
+    .page { max-width: 900px; margin: 24px auto 60px; padding: 0 12px; }
 
     .top-bar {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 16px;
-      padding: 8px 16px;
+      padding: 8px 14px;
       border-radius: 999px;
       background: linear-gradient(90deg, #ff2df3, #7dff5a, #3fe9ff);
-      box-shadow: 0 0 18px rgba(255, 255, 255, 0.3);
+      box-shadow: 0 0 18px rgba(255,255,255,0.3);
     }
-    .logo { font-size: 12px; font-weight: 700; text-shadow: 0 0 6px #000; }
-    .nav { display: flex; gap: 12px; font-size: 13px; font-weight: 600; }
+    .logo { font-size: 12px; font-weight: 700; text-shadow: 0 0 6px #000; white-space: nowrap; }
+    .nav { display: flex; gap: 6px; font-size: 12px; font-weight: 600; align-items: center; }
     .nav a {
-      padding: 4px 10px;
+      padding: 4px 8px;
       border-radius: 999px;
-      background: rgba(0, 0, 0, 0.35);
-      border: 1px solid rgba(0, 0, 0, 0.6);
+      background: rgba(0,0,0,0.35);
+      border: 1px solid rgba(0,0,0,0.6);
+      white-space: nowrap;
     }
-    .nav a:hover { background: rgba(0, 0, 0, 0.8); }
+    .nav a:hover { background: rgba(0,0,0,0.8); }
     .nav a.active { background: #000; border-color: #fffc6e; }
 
+    @media (max-width: 600px) {
+      .top-bar { padding: 6px 10px; }
+      .logo { font-size: 9px; }
+      .nav { gap: 4px; font-size: 10px; }
+      .nav a { padding: 3px 6px; }
+    }
+
     .panel {
-      background: rgba(0, 0, 0, 0.9);
+      background: rgba(0,0,0,0.9);
       border-radius: 12px;
       border: 2px solid #b8ff3c;
-      box-shadow: 0 0 14px rgba(0, 0, 0, 0.8);
+      box-shadow: 0 0 14px rgba(0,0,0,0.8);
       overflow: hidden;
     }
     .panel-header {
@@ -76,16 +77,8 @@
       background: #111;
       border: 1px dashed #fffc6e;
     }
-    .entry-form-title {
-      font-weight: 700;
-      margin-bottom: 8px;
-      color: #fffc6e;
-    }
-    .entry-form-row {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 8px;
-    }
+    .entry-form-title { font-weight: 700; margin-bottom: 8px; color: #fffc6e; }
+    .entry-form-row { display: flex; gap: 8px; margin-bottom: 8px; }
     .entry-form-row input {
       flex: 1;
       padding: 6px 8px;
@@ -94,6 +87,7 @@
       background: #000;
       color: #fff;
       font-size: 13px;
+      min-width: 0;
     }
     .entry-form textarea {
       width: 100%;
@@ -105,21 +99,35 @@
       color: #fff;
       font-size: 13px;
       resize: vertical;
+      margin-bottom: 8px;
     }
     .entry-form-actions {
-      margin-top: 8px;
       display: flex;
-      justify-content: flex-end;
-      gap: 8px;
-      font-size: 11px;
-      color: #aaa;
+      justify-content: space-between;
       align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
     }
-    .mood-tag {
-      padding: 2px 8px;
+    .photo-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 5px 10px;
       border-radius: 999px;
       border: 1px solid #7df9ff;
       font-size: 11px;
+      color: #7df9ff;
+      cursor: pointer;
+    }
+    .photo-label:hover { background: rgba(125,249,255,0.1); }
+    .preview-img {
+      width: 100%;
+      max-height: 180px;
+      object-fit: cover;
+      border-radius: 8px;
+      border: 2px solid #b8ff3c;
+      margin-bottom: 8px;
+      display: none;
     }
     .btn-save {
       padding: 5px 12px;
@@ -137,9 +145,7 @@
     .entries::before {
       content: "";
       position: absolute;
-      left: 8px;
-      top: 0;
-      bottom: 0;
+      left: 8px; top: 0; bottom: 0;
       width: 2px;
       background: linear-gradient(#fffc6e, #ff2df3);
       opacity: 0.8;
@@ -155,35 +161,33 @@
     .entry::before {
       content: "";
       position: absolute;
-      left: -18px;
-      top: 14px;
-      width: 10px;
-      height: 10px;
+      left: -18px; top: 14px;
+      width: 10px; height: 10px;
       border-radius: 50%;
       border: 2px solid #fffc6e;
       background: #000;
       box-shadow: 0 0 6px #fffc6e;
     }
-    .entry-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 4px;
-    }
-    .entry-date { font-size: 11px; color: #fffc6e; }
+    .entry-header { margin-bottom: 6px; }
     .entry-title { font-weight: 700; font-size: 13px; }
-    .entry-mood { font-size: 11px; color: #7df9ff; }
-    .entry-body {
-      font-size: 13px;
-      line-height: 1.6;
-      white-space: pre-wrap;
-      margin-top: 4px;
+    .entry-date { font-size: 11px; color: #fffc6e; margin-top: 2px; }
+    .entry-image {
+      width: 100%;
+      max-height: 300px;
+      object-fit: cover;
+      border-radius: 8px;
+      border: 2px solid #b8ff3c;
+      margin: 6px 0;
     }
-    .loading {
-      text-align: center;
-      font-size: 12px;
-      color: #666;
-      padding: 20px;
+    .entry-body { font-size: 13px; line-height: 1.6; white-space: pre-wrap; margin-top: 4px; }
+    .loading { text-align: center; font-size: 12px; color: #666; padding: 20px; }
+
+    @media (max-width: 600px) {
+      .panel-body { padding: 10px; }
+      .entry-form { padding: 8px 10px; }
+      .entries { padding-left: 18px; }
+      .entry { padding: 8px 10px; }
+      .entry::before { left: -14px; width: 8px; height: 8px; }
     }
   </style>
 </head>
@@ -206,20 +210,20 @@
         <span class="sub">★</span>
       </div>
       <div class="panel-body">
-        <!-- 새 글 쓰기 -->
         <div class="entry-form">
           <div class="entry-form-title">새 글 쓰기</div>
           <div class="entry-form-row">
             <input type="text" id="entryTitle" placeholder="제목을 입력해 주세요." />
           </div>
           <textarea id="entryBody" placeholder="내용을 입력해 주세요."></textarea>
+          <img id="previewImg" class="preview-img" />
+          <input type="file" id="photoInput" accept="image/*" style="display:none" onchange="previewPhoto()" />
           <div class="entry-form-actions">
-            <span class="mood-tag" id="moodTag">Mood: ✨ chill</span>
+            <label class="photo-label" for="photoInput">📷 사진 추가</label>
             <button class="btn-save" id="saveBtn" onclick="submitEntry()">작성하기</button>
           </div>
         </div>
 
-        <!-- 다이어리 목록 -->
         <div class="entries" id="entries">
           <div class="loading">불러오는 중...</div>
         </div>
@@ -227,7 +231,6 @@
     </section>
   </div>
 
-  <!-- Supabase SDK -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
     const _supabase = supabase.createClient(
@@ -235,91 +238,67 @@
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndzZnBsbnVnZmF6cnF5bHVwampiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU3MTMxMTYsImV4cCI6MjA5MTI4OTExNn0.Aa8nzxI182YgUWU3GoJ4kjiqq-nUeUfY7JxG27BlQYY'
     );
 
-    const moods = [
-      "✨ chill", "💿 playlist mode", "🌧 a bit moody",
-      "🎳 tired but happy", "💌 sentimental", "🚀 hyper"
-    ];
-
-    function pickRandomMood() {
-      return moods[Math.floor(Math.random() * moods.length)];
+    function previewPhoto() {
+      const file = document.getElementById('photoInput').files[0];
+      if (!file) return;
+      const preview = document.getElementById('previewImg');
+      preview.src = URL.createObjectURL(file);
+      preview.style.display = 'block';
     }
 
-    // 랜덤 무드 초기 설정
-    document.getElementById('moodTag').textContent = "Mood: " + pickRandomMood();
-
-    // 글 불러오기
     async function loadEntries() {
-      const { data, error } = await _supabase
-        .from('diary')
-        .select('*')
-        .order('created_at', { ascending: false });
+      const { data, error } = await _supabase.from('diary').select('*').order('created_at', { ascending: false });
+      const el = document.getElementById('entries');
+      if (error) { el.innerHTML = '<div class="loading">불러오기 실패 😢</div>'; return; }
+      if (data.length === 0) { el.innerHTML = '<div class="loading">작성된 글이 존재하지 않습니다.</div>'; return; }
 
-      const entriesEl = document.getElementById('entries');
-
-      if (error) {
-        entriesEl.innerHTML = '<div class="loading">불러오기 실패 😢</div>';
-        return;
-      }
-
-      if (data.length === 0) {
-        entriesEl.innerHTML = '<div class="loading">작성된 글이 존재하지 않습니다.</div>';
-        return;
-      }
-
-      entriesEl.innerHTML = data.map(e => {
+      el.innerHTML = data.map(e => {
         const date = new Date(e.created_at);
-        const dateText =
-          date.getFullYear() + '-' +
-          String(date.getMonth()+1).padStart(2,'0') + '-' +
+        const dateText = date.getFullYear() + '-' + String(date.getMonth()+1).padStart(2,'0') + '-' +
           String(date.getDate()).padStart(2,'0') + ' · ' +
-          String(date.getHours()).padStart(2,'0') + ':' +
-          String(date.getMinutes()).padStart(2,'0');
-
+          String(date.getHours()).padStart(2,'0') + ':' + String(date.getMinutes()).padStart(2,'0');
         return `
           <article class="entry">
             <div class="entry-header">
-              <div>
-                <div class="entry-title">${escapeHtml(e.title)}</div>
-                <div class="entry-date">${dateText}</div>
-              </div>
-              <div class="entry-mood">Mood: ${escapeHtml(e.mood)}</div>
+              <div class="entry-title">${escapeHtml(e.title)}</div>
+              <div class="entry-date">${dateText}</div>
             </div>
-            <div class="entry-body">${escapeHtml(e.content).replace(/\n/g, '<br>')}</div>
-          </article>
-        `;
+            ${e.image_url ? `<img src="${e.image_url}" class="entry-image">` : ''}
+            <div class="entry-body">${escapeHtml(e.content).replace(/\n/g,'<br>')}</div>
+          </article>`;
       }).join('');
     }
 
-    // 글 저장
     async function submitEntry() {
       const title = document.getElementById('entryTitle').value.trim() || '제목 없음';
       const content = document.getElementById('entryBody').value.trim();
-      const mood = pickRandomMood();
+      const file = document.getElementById('photoInput').files[0];
       const btn = document.getElementById('saveBtn');
 
       if (!content) return alert('내용을 입력해줘요!');
+      btn.disabled = true; btn.textContent = '저장 중...';
 
-      btn.disabled = true;
-      btn.textContent = '저장 중...';
-
-      const { error } = await _supabase
-        .from('diary')
-        .insert({ title, content, mood });
-
-      if (error) {
-        alert('저장 실패 😢 다시 시도해줘요!');
-      } else {
-        document.getElementById('entryTitle').value = '';
-        document.getElementById('entryBody').value = '';
-        document.getElementById('moodTag').textContent = "Mood: " + pickRandomMood();
-        loadEntries();
+      let image_url = null;
+      if (file) {
+        const fileName = Date.now() + '_' + file.name;
+        const { error: upErr } = await _supabase.storage.from('diary').upload(fileName, file);
+        if (upErr) { alert('사진 업로드 실패 😢'); btn.disabled = false; btn.textContent = '작성하기'; return; }
+        const { data: urlData } = _supabase.storage.from('diary').getPublicUrl(fileName);
+        image_url = urlData.publicUrl;
       }
 
-      btn.disabled = false;
-      btn.textContent = '작성하기';
+      const { error } = await _supabase.from('diary').insert({ title, content, image_url });
+      if (error) { alert('저장 실패 😢'); }
+      else {
+        document.getElementById('entryTitle').value = '';
+        document.getElementById('entryBody').value = '';
+        document.getElementById('photoInput').value = '';
+        document.getElementById('previewImg').style.display = 'none';
+        loadEntries();
+      }
+      btn.disabled = false; btn.textContent = '작성하기';
     }
 
-    // XSS 방지
     function escapeHtml(str) {
       return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
     }
