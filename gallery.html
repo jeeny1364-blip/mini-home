@@ -88,7 +88,6 @@
     .folder-name span.sub { font-size: 11px; color: #aaa; margin-left: 4px; }
     .folder-count { font-size: 11px; color: #bbb; }
 
-    /* 업로드 버튼 */
     .upload-area {
       margin-top: 12px;
       padding: 10px;
@@ -122,7 +121,6 @@
     .upload-btn:hover { filter: brightness(1.1); }
     .upload-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
-    /* 어드민 로그인 */
     .admin-toggle {
       margin-top: 8px;
       font-size: 11px;
@@ -153,7 +151,6 @@
       cursor: pointer;
     }
 
-    /* 이미지 그리드 */
     .right-area { min-height: 260px; }
     #albumView { display: block; }
     .album-grid {
@@ -173,7 +170,6 @@
       width: 100%;
       border-radius: 6px;
       aspect-ratio: 4/3;
-      object-fit: cover;
       border: 1px solid #b8ff3c;
       margin-bottom: 4px;
       background: #222;
@@ -235,13 +231,10 @@
       width: 22px;
       height: 22px;
       cursor: pointer;
-      display: none;
       align-items: center;
       justify-content: center;
       line-height: 1;
     }
-    .admin-mode .delete-btn { display: flex; }
-
     .loading { text-align: center; font-size: 12px; color: #666; padding: 40px; }
   </style>
 </head>
@@ -264,7 +257,6 @@
       </div>
       <div class="panel-body">
         <div class="gallery-layout">
-          <!-- 왼쪽 -->
           <aside>
             <div class="folder-list">
               <div class="folder-item active" data-folder="all">
@@ -281,7 +273,6 @@
               </div>
             </div>
 
-            <!-- 어드민 업로드 영역 -->
             <div class="admin-toggle" onclick="toggleAdminLogin()">🔒 관리자</div>
             <div class="admin-login" id="adminLogin">
               <input type="password" id="adminPw" placeholder="비밀번호" />
@@ -300,22 +291,21 @@
             </div>
           </aside>
 
-          <!-- 오른쪽 -->
           <div class="right-area" id="rightArea">
             <div id="albumView">
               <div class="album-grid">
                 <div class="album-card" data-folder="all">
-                  <div class="album-thumb" id="thumb-all" style="background:#222;"></div>
+                  <div class="album-thumb" id="thumb-all"></div>
                   <div class="album-title">All</div>
                   <div class="album-sub">전체 사진 모음</div>
                 </div>
                 <div class="album-card" data-folder="favorite">
-                  <div class="album-thumb" id="thumb-favorite" style="background:#222;"></div>
+                  <div class="album-thumb" id="thumb-favorite"></div>
                   <div class="album-title">Favorite</div>
                   <div class="album-sub">내 최애컷만 모았어 💖</div>
                 </div>
                 <div class="album-card" data-folder="me">
-                  <div class="album-thumb" id="thumb-me" style="background:#222;"></div>
+                  <div class="album-thumb" id="thumb-me"></div>
                   <div class="album-title">Me</div>
                   <div class="album-sub">나 💁‍♀️</div>
                 </div>
@@ -345,7 +335,7 @@
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndzZnBsbnVnZmF6cnF5bHVwampiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU3MTMxMTYsImV4cCI6MjA5MTI4OTExNn0.Aa8nzxI182YgUWU3GoJ4kjiqq-nUeUfY7JxG27BlQYY'
     );
 
-    // ⚠️ 여기에 비밀번호 입력하세요!
+    // ⚠️ 비밀번호 여기에 직접 입력!
     const ADMIN_PASSWORD = '013000';
 
     const BUCKET = 'gallery';
@@ -355,14 +345,11 @@
     let currentFolder = null;
     let folderImages = { all: [], favorite: [], me: [] };
 
-    // 모든 폴더 이미지 미리 로드
     async function loadAllFolders() {
       for (const folder of Object.keys(FOLDERS)) {
         const imgs = await loadFolder(folder);
         folderImages[folder] = imgs;
         document.getElementById('count-' + folder).textContent = imgs.length + ' pics';
-
-        // 썸네일 설정
         if (imgs.length > 0) {
           const thumb = document.getElementById('thumb-' + folder);
           if (thumb) {
@@ -378,15 +365,11 @@
       const { data, error } = await _supabase.storage
         .from(BUCKET)
         .list(folder, { sortBy: { column: 'created_at', order: 'desc' } });
-
       if (error || !data) return [];
-
       return data
         .filter(f => f.name !== '.emptyFolderPlaceholder')
         .map(f => {
-          const { data: urlData } = _supabase.storage
-            .from(BUCKET)
-            .getPublicUrl(`${folder}/${f.name}`);
+          const { data: urlData } = _supabase.storage.from(BUCKET).getPublicUrl(`${folder}/${f.name}`);
           return { name: f.name, url: urlData.publicUrl, path: `${folder}/${f.name}` };
         });
     }
@@ -406,22 +389,18 @@
           <div class="image-item">
             <img src="${img.url}" alt="${img.name}" loading="lazy">
             <div class="image-caption">${img.name}</div>
-            <button class="delete-btn" style="display:${isAdmin ? 'flex' : 'none'}" onclick="deleteImage...
+            <button class="delete-btn" style="display:${isAdmin ? 'flex' : 'none'}" onclick="deleteImage('${img.path}', '${folderKey}')">✕</button>
           </div>
         `).join('');
       }
 
-      if (isAdmin) document.querySelector('.right-area').classList.add('admin-mode');
-
       document.getElementById('albumView').style.display = 'none';
       document.getElementById('gridView').style.display = 'flex';
-
       document.querySelectorAll('.folder-item').forEach(el => {
         el.classList.toggle('active', el.dataset.folder === folderKey);
       });
     }
 
-    // 폴더/앨범 카드 클릭
     document.querySelectorAll('.folder-item').forEach(el => {
       el.addEventListener('click', () => openGrid(el.dataset.folder));
     });
@@ -429,14 +408,12 @@
       el.addEventListener('click', () => openGrid(el.dataset.folder));
     });
 
-    // 뒤로가기
     document.getElementById('backBtn').addEventListener('click', () => {
       document.getElementById('gridView').style.display = 'none';
       document.getElementById('albumView').style.display = 'block';
       currentFolder = null;
     });
 
-    // 어드민 토글
     function toggleAdminLogin() {
       const el = document.getElementById('adminLogin');
       el.style.display = el.style.display === 'block' ? 'none' : 'block';
@@ -449,17 +426,14 @@
         document.getElementById('adminLogin').style.display = 'none';
         document.getElementById('uploadArea').classList.remove('hidden');
         document.querySelector('.admin-toggle').textContent = '✅ 관리자 모드';
-        document.querySelector('.right-area').classList.add('admin-mode');
       } else {
         alert('비밀번호가 틀렸어요!');
       }
     }
 
-    // 파일 업로드
     document.getElementById('fileInput').addEventListener('change', async (e) => {
       const files = Array.from(e.target.files);
       if (!files.length) return;
-
       const folder = document.getElementById('uploadFolder').value;
       const status = document.getElementById('uploadStatus');
       const btn = document.querySelector('.upload-btn');
@@ -470,10 +444,7 @@
       for (let i = 0; i < files.length; i++) {
         const file = files[i];
         const fileName = Date.now() + '_' + file.name;
-        const { error } = await _supabase.storage
-          .from(BUCKET)
-          .upload(`${folder}/${fileName}`, file);
-
+        const { error } = await _supabase.storage.from(BUCKET).upload(`${folder}/${fileName}`, file);
         if (error) {
           status.textContent = `❌ ${file.name} 업로드 실패`;
         } else {
@@ -485,13 +456,11 @@
       btn.disabled = false;
       e.target.value = '';
 
-      // 해당 폴더 새로고침
       folderImages[folder] = await loadFolder(folder);
       document.getElementById('count-' + folder).textContent = folderImages[folder].length + ' pics';
       if (currentFolder === folder) openGrid(folder);
     });
 
-    // 사진 삭제
     async function deleteImage(path, folder) {
       if (!confirm('이 사진을 삭제할까요?')) return;
       const { error } = await _supabase.storage.from(BUCKET).remove([path]);
