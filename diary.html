@@ -202,19 +202,19 @@
     <section class="panel">
       <div class="panel-header">
         <div>Diary</div>
-        <span class="sub">오늘의 TMI · 생각 기록장</span>
+        <span class="sub">★</span>
       </div>
       <div class="panel-body">
         <!-- 새 글 쓰기 -->
         <div class="entry-form">
           <div class="entry-form-title">새 글 쓰기</div>
           <div class="entry-form-row">
-            <input type="text" id="entryTitle" placeholder="제목을 입력하세요" />
+            <input type="text" id="entryTitle" placeholder="제목을 입력해 주세요." />
           </div>
-          <textarea id="entryBody" placeholder="오늘 있었던 일, TMI, 감정 등을 적어보세요."></textarea>
+          <textarea id="entryBody" placeholder="내용을 입력해 주세요."></textarea>
           <div class="entry-form-actions">
             <span class="mood-tag" id="moodTag">Mood: ✨ chill</span>
-            <button class="btn-save" id="saveBtn" onclick="submitEntry()">글 남기기</button>
+            <button class="btn-save" id="saveBtn" onclick="submitEntry()">작성하기</button>
           </div>
         </div>
 
@@ -261,7 +261,7 @@
       }
 
       if (data.length === 0) {
-        entriesEl.innerHTML = '<div class="loading">아직 일기가 없어요. 첫 글을 써봐요! ✍️</div>';
+        entriesEl.innerHTML = '<div class="loading">작성된 글이 존재하지 않습니다.</div>';
         return;
       }
 
@@ -315,7 +315,7 @@
       }
 
       btn.disabled = false;
-      btn.textContent = '글 남기기';
+      btn.textContent = '작성하기';
     }
 
     // XSS 방지
