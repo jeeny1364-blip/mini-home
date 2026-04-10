@@ -19,27 +19,38 @@
       background-size: 50px 50px;
     }
     .page { max-width: 500px; margin: 20px auto 60px; padding: 0 12px; }
+
+    /* GNB */
     .top-bar {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 16px;
-      padding: 8px 16px;
+      padding: 8px 14px;
       border-radius: 999px;
       background: linear-gradient(90deg, #ff2df3, #7dff5a, #3fe9ff);
       box-shadow: 0 0 18px rgba(255,255,255,0.3);
     }
-    .logo { font-size: 12px; font-weight: 700; }
-    .nav { display: flex; gap: 12px; font-size: 12px; font-weight: 600; }
+    .logo { font-size: 12px; font-weight: 700; white-space: nowrap; }
+    .nav { display: flex; gap: 6px; font-size: 12px; font-weight: 600; align-items: center; }
     .nav a {
-      padding: 4px 10px;
+      padding: 4px 8px;
       border-radius: 999px;
       background: rgba(0,0,0,0.35);
       border: 1px solid rgba(0,0,0,0.5);
       text-decoration: none;
       color: #fff;
+      white-space: nowrap;
     }
     .nav a.active { background: #000; border-color: #fffc6e; }
+
+    @media (max-width: 600px) {
+      .top-bar { padding: 6px 10px; }
+      .logo { font-size: 9px; }
+      .nav { gap: 4px; font-size: 10px; }
+      .nav a { padding: 3px 6px; }
+    }
+
     .chat-panel {
       background: rgba(0,0,0,0.8);
       border: 2px solid #b8ff3c;
@@ -48,6 +59,7 @@
       padding: 14px;
     }
     .chat-title { font-size: 14px; font-weight: 700; margin-bottom: 14px; text-shadow: 0 0 3px #fffc6e; }
+
     .entry-form { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
     .entry-form input {
       padding: 8px 10px;
@@ -55,10 +67,12 @@
       border: 1px solid #3c3c3c;
       background: #000;
       color: #fff;
+      font-size: 13px;
+      width: 100%;
     }
     .entry-form input::placeholder { color: #666; }
     .form-row { display: flex; gap: 8px; }
-    .form-row input { flex: 1; }
+    .form-row input { flex: 1; min-width: 0; }
     .entry-form button {
       padding: 6px 14px;
       border-radius: 30px;
@@ -69,27 +83,29 @@
       font-size: 12px;
       font-weight: 600;
       white-space: nowrap;
+      flex-shrink: 0;
     }
     .entry-form button:hover { filter: brightness(1.1); }
     .entry-form button:disabled { opacity: 0.5; cursor: not-allowed; }
-    .messages { display: flex; flex-direction: column; gap: 12px; max-height: 400px; overflow-y: auto; }
+
+    .messages { display: flex; flex-direction: column; gap: 12px; max-height: 60vh; overflow-y: auto; }
     .message { display: flex; align-items: flex-start; gap: 8px; }
-    .avatar { width: 40px; height: 40px; border-radius: 8px; object-fit: cover; border: 2px solid #fffc6e; flex-shrink: 0; }
+    .avatar { width: 36px; height: 36px; border-radius: 8px; object-fit: cover; border: 2px solid #fffc6e; flex-shrink: 0; }
     .bubble {
       background: linear-gradient(90deg, #ffe7a8, #fffad0);
-      padding: 10px 14px;
+      padding: 8px 12px;
       border-radius: 14px;
       border: 1px solid #ffe68a;
       font-size: 13px;
       color: #333;
-      max-width: 300px;
+      max-width: 100%;
       position: relative;
+      word-break: break-word;
     }
     .bubble::after {
       content: "";
       position: absolute;
-      left: -6px;
-      top: 12px;
+      left: -6px; top: 12px;
       border-width: 6px;
       border-style: solid;
       border-color: transparent #ffe7a8 transparent transparent;
@@ -108,6 +124,7 @@
         <a href="diary.html">Diary</a>
         <a href="gallery.html">Gallery</a>
         <a href="guestbook.html" class="active">Guestbook</a>
+        <a href="admin.html" title="관리자">⚙️</a>
       </nav>
     </header>
 
@@ -137,14 +154,10 @@
 
     async function loadComments() {
       const { data, error } = await _supabase
-        .from('guestbook')
-        .select('*')
-        .order('created_at', { ascending: false });
-
+        .from('guestbook').select('*').order('created_at', { ascending: false });
       const el = document.getElementById('messages');
       if (error) { el.innerHTML = '<div class="loading">불러오기 실패 😢</div>'; return; }
       if (data.length === 0) { el.innerHTML = '<div class="loading">아직 방명록이 없어요. 첫 번째로 남겨주세요!</div>'; return; }
-
       el.innerHTML = data.map(m => {
         const d = new Date(m.created_at);
         const time = String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0');
@@ -168,17 +181,15 @@
       const btn = document.getElementById('submitBtn');
       if (!name) return alert('이름을 입력해줘요!');
       if (!message) return alert('메시지를 입력해줘요!');
-      btn.disabled = true;
-      btn.textContent = '저장 중...';
+      btn.disabled = true; btn.textContent = '저장 중...';
       const { error } = await _supabase.from('guestbook').insert({ name, message });
-      if (error) { alert('저장 실패 😢 다시 시도해줘요!'); }
+      if (error) { alert('저장 실패 😢'); }
       else {
         document.getElementById('guestName').value = '';
         document.getElementById('guestText').value = '';
         loadComments();
       }
-      btn.disabled = false;
-      btn.textContent = '작성';
+      btn.disabled = false; btn.textContent = '작성';
     }
 
     document.getElementById('guestText').addEventListener('keydown', e => {
