@@ -411,7 +411,7 @@
         `).join('');
       }
 
-      if (isAdmin) grid.parentElement.parentElement.classList.add('admin-mode');
+      if (isAdmin) document.querySelector('.right-area').classList.add('admin-mode');
 
       document.getElementById('albumView').style.display = 'none';
       document.getElementById('gridView').style.display = 'flex';
