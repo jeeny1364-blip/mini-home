@@ -6,23 +6,17 @@
   <title>JEENY Mini Home</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!-- 귀여운 폰트 (인터넷 연결 필요) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       min-height: 100vh;
       color: #fff;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont,
-        "Segoe UI", sans-serif;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       background-color: #000;
       background-image:
         radial-gradient(#ff6ef6 1px, transparent 1px),
@@ -32,18 +26,10 @@
       background-size: 50px 50px;
     }
 
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
+    a { color: inherit; text-decoration: none; }
 
-    .page {
-      max-width: 1200px;
-      margin: 24px auto 60px;
-      padding: 0 12px;
-    }
+    .page { max-width: 1200px; margin: 24px auto 60px; padding: 0 12px; }
 
-    /* 상단 헤더 */
     .top-bar {
       display: flex;
       justify-content: space-between;
@@ -54,43 +40,22 @@
       background: linear-gradient(90deg, #ff2df3, #7dff5a, #3fe9ff);
       box-shadow: 0 0 18px rgba(255, 255, 255, 0.3);
     }
-
-    .logo {
-      font-family: "Press Start 2P", system-ui;
-      font-size: 12px;
-      text-shadow: 0 0 6px #000;
-    }
-
-    .nav {
-      display: flex;
-      gap: 12px;
-      font-size: 13px;
-      font-weight: 600;
-    }
-
+    .logo { font-family: "Press Start 2P", system-ui; font-size: 12px; text-shadow: 0 0 6px #000; }
+    .nav { display: flex; gap: 12px; font-size: 13px; font-weight: 600; }
     .nav a {
       padding: 4px 10px;
       border-radius: 999px;
       background: rgba(0, 0, 0, 0.35);
       border: 1px solid rgba(0, 0, 0, 0.6);
     }
+    .nav a:hover { background: rgba(0, 0, 0, 0.8); }
 
-    .nav a:hover {
-      background: rgba(0, 0, 0, 0.8);
-    }
-
-    /* 레이아웃 */
     .layout {
       display: grid;
       grid-template-columns: 340px minmax(0, 1fr);
       gap: 16px;
     }
-
-    @media (max-width: 900px) {
-      .layout {
-        grid-template-columns: 1fr;
-      }
-    }
+    @media (max-width: 900px) { .layout { grid-template-columns: 1fr; } }
 
     .panel {
       background: rgba(0, 0, 0, 0.9);
@@ -100,7 +65,6 @@
       overflow: hidden;
       margin-bottom: 14px;
     }
-
     .panel-header {
       padding: 6px 10px;
       font-size: 13px;
@@ -108,234 +72,80 @@
       background: #ff2df3;
       border-bottom: 2px solid #b8ff3c;
       text-transform: uppercase;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
-
-    .panel-header.blue {
-      background: #00c4ff;
-    }
-
-    .panel-header.green {
-      background: #b8ff3c;
-      color: #000;
-    }
-
-    .panel-header.purple {
-      background: #d44bff;
-    }
-
-    .panel-body {
-      padding: 12px;
-      font-size: 13px;
-    }
+    .panel-header.blue { background: #00c4ff; }
+    .panel-header.green { background: #b8ff3c; color: #000; }
+    .panel-header.purple { background: #d44bff; }
+    .panel-header a { font-size: 11px; font-weight: 400; opacity: 0.85; }
+    .panel-body { padding: 12px; font-size: 13px; }
 
     /* About Me */
-    .about-wrap {
-      display: flex;
-      gap: 10px;
-    }
-
-    .about-photo {
-      width: 120px;
-      height: 120px;
-      border-radius: 4px;
-      object-fit: cover;
-      border: 2px solid #ff2df3;
-    }
-
-    .about-text-title {
-      font-weight: 700;
-      margin-bottom: 4px;
-      color: #b8ff3c;
-    }
-
-    .about-quote {
-      font-size: 12px;
-      margin-bottom: 8px;
-      color: #fffc6e;
-    }
-
-    .about-list dt {
-      font-weight: 700;
-      font-size: 12px;
-      margin-top: 4px;
-      color: #7df9ff;
-    }
-
-    .about-list dd {
-      font-size: 12px;
-      margin-left: 0;
-    }
+    .about-wrap { display: flex; gap: 10px; }
+    .about-photo { width: 120px; height: 120px; border-radius: 4px; object-fit: cover; border: 2px solid #ff2df3; }
+    .about-text-title { font-weight: 700; margin-bottom: 4px; color: #b8ff3c; }
+    .about-quote { font-size: 12px; margin-bottom: 8px; color: #fffc6e; }
+    .about-list dt { font-weight: 700; font-size: 12px; margin-top: 4px; color: #7df9ff; }
+    .about-list dd { font-size: 12px; margin-left: 0; }
 
     /* Welcome */
     .welcome-banner {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 80px;
-      background: #000;
-      border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+      height: 80px; background: #000; border-radius: 6px;
       border: 2px dashed #fffc6e;
-      font-family: "Press Start 2P", system-ui;
-      font-size: 11px;
-      text-align: center;
-      line-height: 1.5;
-      text-shadow: 0 0 6px #fffc6e;
+      font-family: "Press Start 2P", system-ui; font-size: 11px;
+      text-align: center; line-height: 1.5; text-shadow: 0 0 6px #fffc6e;
+    }
+
+    /* Music - 유튜브 */
+    .yt-wrap {
+      border-radius: 8px;
+      overflow: hidden;
+      border: 2px solid #fffc6e;
+    }
+    .yt-wrap iframe {
+      display: block;
+      width: 100%;
+      height: 160px;
     }
 
     /* Friends */
-    .friends-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 6px;
-    }
+    .friends-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+    .friend { text-align: center; font-size: 11px; }
+    .friend img { width: 90%; aspect-ratio: 1/1; border-radius: 4px; object-fit: cover; border: 1px solid #b8ff3c; margin-bottom: 2px; }
 
-    .friend {
-      text-align: center;
-      font-size: 11px;
-    }
+    /* Posts */
+    .posts-column .panel { margin-bottom: 20px; }
+    .post-header { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; font-size: 12px; }
+    .post-avatar { width: 26px; height: 26px; border-radius: 4px; object-fit: cover; border: 1px solid #fffc6e; }
+    .post-name { font-weight: 700; }
+    .post-time { margin-left: auto; font-size: 11px; color: #999; }
+    .post-image { width: 100%; border-radius: 6px; border: 2px solid #b8ff3c; object-fit: cover; margin-bottom: 6px; max-height: 420px; }
+    .post-text { font-size: 13px; margin-bottom: 10px; }
+    .comments { margin-top: 8px; border-top: 1px solid #3c3c3c; padding-top: 6px; font-size: 12px; }
+    .comment { display: flex; align-items: center; gap: 8px; padding: 4px 0; border-bottom: 1px solid #222; }
+    .comment:last-child { border-bottom: none; }
+    .comment-avatar { width: 20px; height: 20px; border-radius: 3px; object-fit: cover; }
+    .comment-name { font-weight: 600; margin-right: 4px; }
+    .comment-text { flex: 1; }
+    .comment-time { font-size: 10px; color: #777; }
 
-    .friend img {
-      width: 90%;
-      aspect-ratio: 1 / 1;
-      border-radius: 4px;
-      object-fit: cover;
-      border: 1px solid #b8ff3c;
-      margin-bottom: 2px;
+    /* 다이어리 최근 글 */
+    .diary-entry {
+      padding: 8px 0;
+      border-bottom: 1px solid #2a2a2a;
     }
-
-    /* Music player */
-    .music-player {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .music-cover img {
-      width: 64px;
-      height: 64px;
-      border-radius: 6px;
-      object-fit: cover;
-      border: 2px solid #fffc6e;
-    }
-
-    .music-info {
-      flex: 1;
-    }
-
-    .music-title {
-      font-weight: 700;
-      font-size: 13px;
-    }
-
-    .music-artist {
-      font-size: 12px;
-      color: #ccc;
-      margin-bottom: 6px;
-    }
-
-    .music-btn {
-      padding: 4px 10px;
-      border-radius: 999px;
-      border: 1px solid #ff2df3;
-      background: #ff2df3;
-      color: #fff;
-      font-size: 12px;
-      cursor: pointer;
-    }
-
-    .music-btn:hover {
-      filter: brightness(1.05);
-    }
-
-    /* 오른쪽 - Posts */
-    .posts-column .panel {
-      margin-bottom: 20px;
-    }
-
-    .post-header {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 8px;
-      font-size: 12px;
-    }
-
-    .post-avatar {
-      width: 26px;
-      height: 26px;
-      border-radius: 4px;
-      object-fit: cover;
-      border: 1px solid #fffc6e;
-    }
-
-    .post-name {
-      font-weight: 700;
-    }
-
-    .post-time {
-      margin-left: auto;
-      font-size: 11px;
-      color: #999;
-    }
-
-    .post-image {
-      width: 100%;
-      border-radius: 6px;
-      border: 2px solid #b8ff3c;
-      object-fit: cover;
-      margin-bottom: 6px;
-      max-height: 420px;
-    }
-
-    .post-text {
-      font-size: 13px;
-      margin-bottom: 10px;
-    }
-
-    .comments {
-      margin-top: 8px;
-      border-top: 1px solid #3c3c3c;
-      padding-top: 6px;
-      font-size: 12px;
-    }
-
-    .comment {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 4px 0;
-      border-bottom: 1px solid #222;
-    }
-
-    .comment:last-child {
-      border-bottom: none;
-    }
-
-    .comment-avatar {
-      width: 20px;
-      height: 20px;
-      border-radius: 3px;
-      object-fit: cover;
-    }
-
-    .comment-name {
-      font-weight: 600;
-      margin-right: 4px;
-    }
-
-    .comment-text {
-      flex: 1;
-    }
-
-    .comment-time {
-      font-size: 10px;
-      color: #777;
-    }
+    .diary-entry:last-child { border-bottom: none; }
+    .diary-entry-title { font-weight: 700; font-size: 13px; margin-bottom: 2px; }
+    .diary-entry-body { font-size: 12px; color: #aaa; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .diary-entry-date { font-size: 10px; color: #fffc6e; margin-top: 2px; }
+    .diary-empty { font-size: 12px; color: #666; text-align: center; padding: 10px 0; }
   </style>
 </head>
 <body>
   <div class="page">
-    <!-- 상단 네온 헤더 -->
     <header class="top-bar">
       <div class="logo">★ MINI HOME ★</div>
       <nav class="nav">
@@ -357,7 +167,7 @@
               <img src="profile.jpg" alt="profile" class="about-photo" />
               <div>
                 <div class="about-text-title">
-                  Jeeny<br><span style="font-size:11px;">“Life is a mixtape”</span>
+                  Jeeny<br><span style="font-size:11px;">"Life is a mixtape"</span>
                 </div>
                 <p class="about-quote">Ready to dance, always online ★</p>
                 <dl class="about-list">
@@ -377,27 +187,23 @@
         <div class="panel">
           <div class="panel-header blue">Welcome</div>
           <div class="panel-body">
-            <div class="welcome-banner">
-              ☆ Welcome to my page ☆
-            </div>
+            <div class="welcome-banner">☆ Welcome to my page ☆</div>
           </div>
         </div>
 
-        <!-- Music player -->
+        <!-- Music - 유튜브 iframe -->
         <div class="panel">
           <div class="panel-header purple">Music</div>
           <div class="panel-body">
-            <div class="music-player">
-              <div class="music-cover">
-                <img src="album.jpg" alt="album cover">
-              </div>
-              <div class="music-info">
-                <div class="music-title">Hype boy</div>
-                <div class="music-artist">Newjeans</div>
-                <button class="music-btn" id="musicToggle">▶ Play</button>
-              </div>
+            <div class="yt-wrap">
+              <iframe
+                src="https://www.youtube.com/embed/GGe5OkNgZjQ"
+                title="YouTube music player"
+                frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen>
+              </iframe>
             </div>
-            <audio id="bgmAudio" src="music.mp3" loop></audio>
           </div>
         </div>
 
@@ -406,38 +212,30 @@
           <div class="panel-header green">Friends</div>
           <div class="panel-body">
             <div class="friends-grid">
-              <div class="friend">
-                <img src="friend1.jpg" alt="friend1">
-                <div>Lescol</div>
-              </div>
-              <div class="friend">
-                <img src="friend2.jpg" alt="friend2">
-                <div>Haum</div>
-              </div>
-              <div class="friend">
-                <img src="friend3.jpg" alt="friend3">
-                <div>Su</div>
-              </div>
-              <div class="friend">
-                <img src="friend4.jpg" alt="friend4">
-                <div>Kya</div>
-              </div>
-              <div class="friend">
-                <img src="friend5.jpg" alt="friend5">
-                <div>Twikiri</div>
-              </div>
-              <div class="friend">
-                <img src="friend6.jpg" alt="friend6">
-                <div>You</div>
-              </div>
+              <div class="friend"><img src="friend1.jpg" alt="friend1"><div>Lescol</div></div>
+              <div class="friend"><img src="friend2.jpg" alt="friend2"><div>Haum</div></div>
+              <div class="friend"><img src="friend3.jpg" alt="friend3"><div>Su</div></div>
+              <div class="friend"><img src="friend4.jpg" alt="friend4"><div>Kya</div></div>
+              <div class="friend"><img src="friend5.jpg" alt="friend5"><div>Twikiri</div></div>
+              <div class="friend"><img src="friend6.jpg" alt="friend6"><div>You</div></div>
             </div>
+          </div>
+        </div>
+
+        <!-- 다이어리 최근 글 -->
+        <div class="panel">
+          <div class="panel-header">
+            <span>Recent Diary</span>
+            <a href="diary.html">더보기 →</a>
+          </div>
+          <div class="panel-body" id="recentDiary">
+            <div class="diary-empty">불러오는 중...</div>
           </div>
         </div>
       </section>
 
       <!-- 오른쪽 포스트 피드 -->
       <section class="posts-column">
-        <!-- Post 1 -->
         <article class="panel">
           <div class="panel-header">Posts</div>
           <div class="panel-body">
@@ -448,7 +246,6 @@
             </div>
             <img src="post1.jpg" class="post-image" alt="post1">
             <p class="post-text">my cat!!! 💗</p>
-
             <div class="comments">
               <div class="comment">
                 <img src="friend1.jpg" class="comment-avatar" alt="friend1">
@@ -462,7 +259,6 @@
           </div>
         </article>
 
-        <!-- Post 2 -->
         <article class="panel">
           <div class="panel-body">
             <div class="post-header">
@@ -472,7 +268,6 @@
             </div>
             <img src="post2.jpg" class="post-image" alt="post2">
             <p class="post-text">뒷마당 💫</p>
-
             <div class="comments">
               <div class="comment">
                 <img src="friend2.jpg" class="comment-avatar" alt="friend2">
@@ -489,26 +284,45 @@
     </main>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
-    // 간단한 BGM 플레이/멈춤
-    const audio = document.getElementById("bgmAudio");
-    const toggleBtn = document.getElementById("musicToggle");
-    let isPlaying = false;
+    const _supabase = supabase.createClient(
+      'https://wsfplnugfazrqylupjjb.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndzZnBsbnVnZmF6cnF5bHVwampiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU3MTMxMTYsImV4cCI6MjA5MTI4OTExNn0.Aa8nzxI182YgUWU3GoJ4kjiqq-nUeUfY7JxG27BlQYY'
+    );
 
-    toggleBtn.addEventListener("click", () => {
-      if (!isPlaying) {
-        audio.play();
-        isPlaying = true;
-        toggleBtn.textContent = "❚❚ Pause";
-      } else {
-        audio.pause();
-        isPlaying = false;
-        toggleBtn.textContent = "▶ Play";
+    // 다이어리 최근 글 3개 불러오기
+    async function loadRecentDiary() {
+      const { data, error } = await _supabase
+        .from('diary')
+        .select('*')
+        .order('created_at', { ascending: false })
+        .limit(3);
+
+      const el = document.getElementById('recentDiary');
+
+      if (error || !data || data.length === 0) {
+        el.innerHTML = '<div class="diary-empty">아직 일기가 없어요 ✍️</div>';
+        return;
       }
-    });
+
+      el.innerHTML = data.map(e => {
+        const date = new Date(e.created_at);
+        const dateText =
+          date.getFullYear() + '-' +
+          String(date.getMonth()+1).padStart(2,'0') + '-' +
+          String(date.getDate()).padStart(2,'0');
+        return `
+          <div class="diary-entry">
+            <div class="diary-entry-title">${e.title}</div>
+            <div class="diary-entry-body">${e.content}</div>
+            <div class="diary-entry-date">${dateText} · Mood: ${e.mood}</div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    loadRecentDiary();
   </script>
 </body>
 </html>
-
-
-
