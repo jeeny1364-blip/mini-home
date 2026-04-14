@@ -280,7 +280,8 @@
 
       let image_url = null;
       if (file) {
-        const fileName = Date.now() + '_' + file.name;
+        const ext = file.name.split('.').pop();
+        const fileName = Date.now() + '.' + ext;
         const { error: upErr } = await _supabase.storage.from('diary').upload(fileName, file);
         if (upErr) { alert('사진 업로드 실패 😢'); btn.disabled = false; btn.textContent = '작성하기'; return; }
         const { data: urlData } = _supabase.storage.from('diary').getPublicUrl(fileName);
