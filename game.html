@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>똥 피하기 - Mini Home</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      min-height: 100vh;
+      background-color: #000;
+      font-family: system-ui, sans-serif;
+      color: #fff;
+      background-image:
+        radial-gradient(#ff6ef6 1px, transparent 1px),
+        radial-gradient(#7df9ff 1px, transparent 1px),
+        radial-gradient(#fffc6e 1px, transparent 1px);
+      background-position: 0 0, 25px 25px, 12px 12px;
+      background-size: 50px 50px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 16px 0;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #ff2df3, #7dff5a, #3fe9ff);
+      box-shadow: 0 0 18px rgba(255,255,255,0.3);
+      width: calc(100% - 24px);
+      max-width: 500px;
+    }
+    .logo { font-size: 12px; font-weight: 700; text-shadow: 0 0 6px #000; }
+    .nav { display: flex; gap: 6px; font-size: 12px; font-weight: 600; }
+    .nav a {
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: rgba(0,0,0,0.35);
+      border: 1px solid rgba(0,0,0,0.6);
+      text-decoration: none;
+      color: #fff;
+      white-space: nowrap;
+    }
+
+    .game-wrap {
+      background: rgba(0,0,0,0.85);
+      border: 2px solid #b8ff3c;
+      border-radius: 14px;
+      overflow: hidden;
+      width: calc(100% - 24px);
+      max-width: 500px;
+    }
+
+    .game-header {
+      background: #ff2df3;
+      border-bottom: 2px solid #b8ff3c;
+      padding: 6px 14px;
+      font-weight: 700;
+      font-size: 13px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    #gameCanvas {
+      display: block;
+      width: 100%;
+      background: #000;
+      touch-action: none;
+    }
+
+    .game-footer {
+      padding: 10px 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      color: #aaa;
+    }
+    .game-footer span { color: #fffc6e; font-weight: 700; }
+
+    #startBtn {
+      padding: 6px 16px;
+      border-radius: 999px;
+      background: #ff2df3;
+      border: none;
+      color: #fff;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    #startBtn:hover { filter: brightness(1.1); }
+  </style>
+</head>
+<body>
+  <div class="top-bar">
+    <div class="logo">★ MINI HOME ★</div>
+    <nav class="nav">
+      <a href="index.html">← 홈으로</a>
+    </nav>
+  </div>
+
+  <div class="game-wrap">
+    <div class="game-header">
+      <span>👼🏻 똥 피하기</span>
+      <span id="scoreDisplay">점수: 0</span>
+    </div>
+    <canvas id="gameCanvas" width="500" height="500"></canvas>
+    <div class="game-footer">
+      <span id="bestDisplay">최고: 0</span>
+      <button id="startBtn" onclick="startGame()">시작하기</button>
+    </div>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+
+    // 캔버스 크기 반응형
+    function resizeCanvas() {
+      const w = canvas.parentElement.clientWidth - 4;
+      canvas.width = w;
+      canvas.height = Math.min(w, 500);
+    }
+    resizeCanvas();
+    window.addEventListener('resize', () => { resizeCanvas(); });
+
+    const W = () => canvas.width;
+    const H = () => canvas.height;
+
+    let player, poops, score, bestScore, gameRunning, animId, speed, frameCount;
+
+    bestScore = 0;
+
+    function initGame() {
+      player = {
+        x: W() / 2,
+        y: H() - 60,
+        size: 36,
+        speed: 7,
+        moving: 0
+      };
+      poops = [];
+      score = 0;
+      speed = 2.5;
+      frameCount = 0;
+      gameRunning = true;
+    }
+
+    function spawnPoop() {
+      poops.push({
+        x: Math.random() * (W() - 30) + 15,
+        y: -30,
+        size: 28 + Math.random() * 14,
+        speed: speed + Math.random() * 1.5
+      });
+    }
+
+    function update() {
+      if (!gameRunning) return;
+
+      frameCount++;
+      score = Math.floor(frameCount / 6);
+      document.getElementById('scoreDisplay').textContent = '점수: ' + score;
+
+      // 난이도 상승
+      speed = 2.5 + frameCount / 400;
+
+      // 똥 생성
+      const spawnRate = Math.max(30, 70 - Math.floor(frameCount / 100));
+      if (frameCount % spawnRate === 0) spawnPoop();
+
+      // 플레이어 이동
+      player.x += player.moving * player.speed;
+      player.x = Math.max(player.size/2, Math.min(W() - player.size/2, player.x));
+
+      // 똥 이동
+      for (let i = poops.length - 1; i >= 0; i--) {
+        poops[i].y += poops[i].speed;
+        if (poops[i].y > H() + 30) { poops.splice(i, 1); continue; }
+
+        // 충돌 체크
+        const dx = poops[i].x - player.x;
+        const dy = poops[i].y - player.y;
+        const dist = Math.sqrt(dx*dx + dy*dy);
+        if (dist < (player.size/2 + poops[i].size/2) * 0.65) {
+          gameOver(); return;
+        }
+      }
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, W(), H());
+
+      // 배경
+      ctx.fillStyle = '#050510';
+      ctx.fillRect(0, 0, W(), H());
+
+      // 별 배경
+      ctx.fillStyle = 'rgba(255,255,255,0.3)';
+      for (let i = 0; i < 30; i++) {
+        const sx = ((i * 137 + frameCount * 0.2) % W());
+        const sy = ((i * 97) % H());
+        ctx.fillRect(sx, sy, 1.5, 1.5);
+      }
+
+      // 플레이어
+      ctx.font = player.size + 'px serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('👼🏻', player.x, player.y);
+
+      // 똥
+      for (const p of poops) {
+        ctx.font = p.size + 'px serif';
+        ctx.fillText('💩', p.x, p.y);
+      }
+
+      // 게임 오버 화면
+      if (!gameRunning && frameCount > 0) {
+        ctx.fillStyle = 'rgba(0,0,0,0.7)';
+        ctx.fillRect(0, 0, W(), H());
+        ctx.fillStyle = '#fff';
+        ctx.font = 'bold 22px system-ui';
+        ctx.textAlign = 'center';
+        ctx.fillText('💩 Game Over 💩', W()/2, H()/2 - 30);
+        ctx.font = '16px system-ui';
+        ctx.fillStyle = '#fffc6e';
+        ctx.fillText('점수: ' + score, W()/2, H()/2 + 5);
+        ctx.fillStyle = '#7df9ff';
+        ctx.fillText('최고: ' + bestScore, W()/2, H()/2 + 30);
+        ctx.fillStyle = '#ff2df3';
+        ctx.font = '13px system-ui';
+        ctx.fillText('시작하기 버튼을 눌러 다시 플레이!', W()/2, H()/2 + 60);
+      }
+
+      // 시작 전 화면
+      if (!gameRunning && frameCount === 0) {
+        ctx.fillStyle = 'rgba(0,0,0,0.5)';
+        ctx.fillRect(0, 0, W(), H());
+        ctx.font = '40px serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('👼🏻', W()/2, H()/2 - 20);
+        ctx.font = 'bold 16px system-ui';
+        ctx.fillStyle = '#fffc6e';
+        ctx.fillText('똥을 피하세요!', W()/2, H()/2 + 20);
+        ctx.font = '12px system-ui';
+        ctx.fillStyle = '#aaa';
+        ctx.fillText('← → 키 또는 화면 터치로 이동', W()/2, H()/2 + 50);
+      }
+    }
+
+    function gameLoop() {
+      update();
+      draw();
+      animId = requestAnimationFrame(gameLoop);
+    }
+
+    function startGame() {
+      if (animId) cancelAnimationFrame(animId);
+      initGame();
+      gameLoop();
+    }
+
+    function gameOver() {
+      gameRunning = false;
+      if (score > bestScore) {
+        bestScore = score;
+        document.getElementById('bestDisplay').textContent = '최고: ' + bestScore;
+      }
+    }
+
+    // 키보드
+    document.addEventListener('keydown', e => {
+      if (e.key === 'ArrowLeft') player.moving = -1;
+      if (e.key === 'ArrowRight') player.moving = 1;
+    });
+    document.addEventListener('keyup', e => {
+      if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') player.moving = 0;
+    });
+
+    // 터치 (모바일)
+    let touchStartX = 0;
+    canvas.addEventListener('touchstart', e => {
+      touchStartX = e.touches[0].clientX;
+    });
+    canvas.addEventListener('touchmove', e => {
+      e.preventDefault();
+      const dx = e.touches[0].clientX - touchStartX;
+      player.x += dx * 0.4;
+      player.x = Math.max(player.size/2, Math.min(W() - player.size/2, player.x));
+      touchStartX = e.touches[0].clientX;
+    });
+
+    // 초기 화면
+    frameCount = 0;
+    gameRunning = false;
+    draw();
+  </script>
+</body>
+</html>
