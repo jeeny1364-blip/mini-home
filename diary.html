@@ -70,6 +70,7 @@
     .panel-header span.sub { font-size: 11px; font-weight: 400; }
     .panel-body { padding: 14px 14px 18px; font-size: 13px; }
 
+    /* 글쓰기 폼 */
     .entry-form {
       margin-bottom: 18px;
       padding: 10px 12px;
@@ -101,13 +102,7 @@
       resize: vertical;
       margin-bottom: 8px;
     }
-    .entry-form-actions {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
+    .entry-form-actions { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
     .photo-label {
       display: inline-flex;
       align-items: center;
@@ -141,6 +136,36 @@
     .btn-save:hover { filter: brightness(1.05); }
     .btn-save:disabled { opacity: 0.5; cursor: not-allowed; }
 
+    /* 관리자 토글 */
+    .admin-toggle-diary {
+      font-size: 11px;
+      color: #666;
+      cursor: pointer;
+      text-align: right;
+      margin-bottom: 10px;
+    }
+    .admin-toggle-diary:hover { color: #aaa; }
+    .admin-login-diary { display: none; margin-bottom: 10px; display: none; gap: 6px; }
+    .admin-login-diary input {
+      flex: 1;
+      padding: 5px 8px;
+      border-radius: 6px;
+      border: 1px solid #3c3c3c;
+      background: #000;
+      color: #fff;
+      font-size: 12px;
+    }
+    .admin-login-diary button {
+      padding: 5px 10px;
+      border-radius: 6px;
+      background: #333;
+      border: 1px solid #666;
+      color: #fff;
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    /* 엔트리 */
     .entries { position: relative; padding-left: 24px; }
     .entries::before {
       content: "";
@@ -168,9 +193,27 @@
       background: #000;
       box-shadow: 0 0 6px #fffc6e;
     }
-    .entry-header { margin-bottom: 6px; }
+    .entry-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 6px;
+      gap: 8px;
+    }
     .entry-title { font-weight: 700; font-size: 13px; }
     .entry-date { font-size: 11px; color: #fffc6e; margin-top: 2px; }
+    .entry-actions { display: none; gap: 4px; flex-shrink: 0; }
+    .entry-actions.visible { display: flex; }
+    .btn-edit, .btn-delete {
+      padding: 3px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      cursor: pointer;
+      border: none;
+    }
+    .btn-edit { background: #7df9ff; color: #000; }
+    .btn-delete { background: #ff4444; color: #fff; }
+
     .entry-image {
       width: 100%;
       max-height: 300px;
@@ -178,9 +221,55 @@
       border-radius: 8px;
       border: 2px solid #b8ff3c;
       margin: 6px 0;
+      cursor: zoom-in;
     }
     .entry-body { font-size: 13px; line-height: 1.6; white-space: pre-wrap; margin-top: 4px; }
     .loading { text-align: center; font-size: 12px; color: #666; padding: 20px; }
+
+    /* 수정 폼 */
+    .edit-form { margin-top: 8px; display: none; }
+    .edit-form input, .edit-form textarea {
+      width: 100%;
+      padding: 6px 8px;
+      border-radius: 8px;
+      border: 1px solid #3c3c3c;
+      background: #000;
+      color: #fff;
+      font-size: 13px;
+      margin-bottom: 6px;
+    }
+    .edit-form textarea { min-height: 60px; resize: vertical; }
+    .edit-actions { display: flex; gap: 6px; justify-content: flex-end; }
+    .btn-confirm { padding: 4px 10px; border-radius: 999px; background: #ff2df3; border: none; color: #fff; font-size: 11px; cursor: pointer; }
+    .btn-cancel { padding: 4px 10px; border-radius: 999px; background: #333; border: 1px solid #666; color: #fff; font-size: 11px; cursor: pointer; }
+
+    /* 라이트박스 */
+    .lightbox {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.92);
+      z-index: 9999;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .lightbox.open { display: flex; }
+    .lightbox img {
+      max-width: 100%;
+      max-height: 90vh;
+      border-radius: 8px;
+      border: 2px solid #b8ff3c;
+      object-fit: contain;
+    }
+    .lightbox-close {
+      position: absolute;
+      top: 16px; right: 20px;
+      font-size: 28px;
+      cursor: pointer;
+      color: #fff;
+      line-height: 1;
+    }
 
     @media (max-width: 600px) {
       .panel-body { padding: 10px; }
@@ -210,6 +299,7 @@
         <span class="sub">★</span>
       </div>
       <div class="panel-body">
+        <!-- 글쓰기 폼 -->
         <div class="entry-form">
           <div class="entry-form-title">새 글 쓰기</div>
           <div class="entry-form-row">
@@ -224,11 +314,25 @@
           </div>
         </div>
 
+        <!-- 관리자 토글 -->
+        <div class="admin-toggle-diary" onclick="toggleDiaryAdmin()">🔒 관리자</div>
+        <div class="admin-login-diary" id="diaryAdminLogin">
+          <input type="password" id="diaryAdminPw" placeholder="비밀번호" />
+          <button onclick="checkDiaryAdmin()">확인</button>
+        </div>
+
+        <!-- 글 목록 -->
         <div class="entries" id="entries">
           <div class="loading">불러오는 중...</div>
         </div>
       </div>
     </section>
+  </div>
+
+  <!-- 라이트박스 -->
+  <div class="lightbox" id="lightbox" onclick="closeLightbox()">
+    <span class="lightbox-close">✕</span>
+    <img id="lightboxImg" src="" />
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -238,6 +342,25 @@
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndzZnBsbnVnZmF6cnF5bHVwampiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU3MTMxMTYsImV4cCI6MjA5MTI4OTExNn0.Aa8nzxI182YgUWU3GoJ4kjiqq-nUeUfY7JxG27BlQYY'
     );
 
+    const ADMIN_PASSWORD = '013000';
+    let isAdmin = false;
+
+    // 관리자 토글
+    function toggleDiaryAdmin() {
+      const el = document.getElementById('diaryAdminLogin');
+      el.style.display = el.style.display === 'flex' ? 'none' : 'flex';
+    }
+
+    function checkDiaryAdmin() {
+      if (document.getElementById('diaryAdminPw').value === ADMIN_PASSWORD) {
+        isAdmin = true;
+        document.getElementById('diaryAdminLogin').style.display = 'none';
+        document.querySelector('.admin-toggle-diary').textContent = '✅ 관리자 모드';
+        loadEntries();
+      } else { alert('비밀번호가 틀렸어요!'); }
+    }
+
+    // 사진 미리보기
     function previewPhoto() {
       const file = document.getElementById('photoInput').files[0];
       if (!file) return;
@@ -246,6 +369,17 @@
       preview.style.display = 'block';
     }
 
+    // 라이트박스
+    function openLightbox(src) {
+      document.getElementById('lightboxImg').src = src;
+      document.getElementById('lightbox').classList.add('open');
+    }
+    function closeLightbox() {
+      document.getElementById('lightbox').classList.remove('open');
+    }
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+
+    // 글 목록 불러오기
     async function loadEntries() {
       const { data, error } = await _supabase.from('diary').select('*').order('created_at', { ascending: false });
       const el = document.getElementById('entries');
@@ -258,17 +392,60 @@
           String(date.getDate()).padStart(2,'0') + ' · ' +
           String(date.getHours()).padStart(2,'0') + ':' + String(date.getMinutes()).padStart(2,'0');
         return `
-          <article class="entry">
+          <article class="entry" id="entry-${e.id}">
             <div class="entry-header">
-              <div class="entry-title">${escapeHtml(e.title)}</div>
-              <div class="entry-date">${dateText}</div>
+              <div>
+                <div class="entry-title">${escapeHtml(e.title)}</div>
+                <div class="entry-date">${dateText}</div>
+              </div>
+              <div class="entry-actions ${isAdmin ? 'visible' : ''}">
+                <button class="btn-edit" onclick="toggleEdit(${e.id})">수정</button>
+                <button class="btn-delete" onclick="deleteEntry(${e.id}, '${e.image_url || ''}')">삭제</button>
+              </div>
             </div>
-            ${e.image_url ? `<img src="${e.image_url}" class="entry-image">` : ''}
-            <div class="entry-body">${escapeHtml(e.content).replace(/\n/g,'<br>')}</div>
+            ${e.image_url ? `<img src="${e.image_url}" class="entry-image" onclick="openLightbox('${e.image_url}')">` : ''}
+            <div class="entry-body" id="body-${e.id}">${escapeHtml(e.content).replace(/\n/g,'<br>')}</div>
+            <div class="edit-form" id="edit-${e.id}">
+              <input type="text" id="edit-title-${e.id}" value="${escapeHtml(e.title)}" />
+              <textarea id="edit-content-${e.id}">${escapeHtml(e.content)}</textarea>
+              <div class="edit-actions">
+                <button class="btn-cancel" onclick="toggleEdit(${e.id})">취소</button>
+                <button class="btn-confirm" onclick="updateEntry(${e.id})">저장</button>
+              </div>
+            </div>
           </article>`;
       }).join('');
     }
 
+    // 수정 폼 토글
+    function toggleEdit(id) {
+      const form = document.getElementById('edit-' + id);
+      form.style.display = form.style.display === 'block' ? 'none' : 'block';
+    }
+
+    // 글 수정
+    async function updateEntry(id) {
+      const title = document.getElementById('edit-title-' + id).value.trim() || '제목 없음';
+      const content = document.getElementById('edit-content-' + id).value.trim();
+      if (!content) return alert('내용을 입력해줘요!');
+      const { error } = await _supabase.from('diary').update({ title, content }).eq('id', id);
+      if (error) { alert('수정 실패 😢'); return; }
+      loadEntries();
+    }
+
+    // 글 삭제
+    async function deleteEntry(id, imageUrl) {
+      if (!confirm('이 글을 삭제할까요?')) return;
+      if (imageUrl) {
+        const fileName = imageUrl.split('/').pop();
+        await _supabase.storage.from('diary').remove([fileName]);
+      }
+      const { error } = await _supabase.from('diary').delete().eq('id', id);
+      if (error) { alert('삭제 실패 😢'); return; }
+      loadEntries();
+    }
+
+    // 글 작성
     async function submitEntry() {
       const title = document.getElementById('entryTitle').value.trim() || '제목 없음';
       const content = document.getElementById('entryBody').value.trim();
@@ -301,6 +478,7 @@
     }
 
     function escapeHtml(str) {
+      if (!str) return '';
       return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
     }
 
