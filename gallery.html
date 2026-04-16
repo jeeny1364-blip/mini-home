@@ -21,25 +21,17 @@
     a { color: inherit; text-decoration: none; }
     .page { max-width: 1200px; margin: 24px auto 60px; padding: 0 12px; }
 
-    /* GNB */
     .top-bar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 16px;
-      padding: 8px 14px;
-      border-radius: 999px;
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 16px; padding: 8px 14px; border-radius: 999px;
       background: linear-gradient(90deg, #ff2df3, #7dff5a, #3fe9ff);
       box-shadow: 0 0 18px rgba(255,255,255,0.3);
     }
     .logo { font-size: 12px; font-weight: 700; text-shadow: 0 0 6px #000; white-space: nowrap; }
     .nav { display: flex; gap: 6px; font-size: 12px; font-weight: 600; align-items: center; }
     .nav a {
-      padding: 4px 8px;
-      border-radius: 999px;
-      background: rgba(0,0,0,0.35);
-      border: 1px solid rgba(0,0,0,0.6);
-      white-space: nowrap;
+      padding: 4px 8px; border-radius: 999px;
+      background: rgba(0,0,0,0.35); border: 1px solid rgba(0,0,0,0.6); white-space: nowrap;
     }
     .nav a:hover { background: rgba(0,0,0,0.8); }
     .nav a.active { background: #000; border-color: #fffc6e; }
@@ -52,50 +44,28 @@
     }
 
     .panel {
-      background: rgba(0,0,0,0.9);
-      border-radius: 10px;
-      border: 2px solid #b8ff3c;
-      box-shadow: 0 0 14px rgba(0,0,0,0.8);
-      overflow: hidden;
+      background: rgba(0,0,0,0.9); border-radius: 10px;
+      border: 2px solid #b8ff3c; box-shadow: 0 0 14px rgba(0,0,0,0.8); overflow: hidden;
     }
     .panel-header {
-      padding: 6px 10px;
-      font-size: 13px;
-      font-weight: 700;
-      background: #00c4ff;
-      border-bottom: 2px solid #b8ff3c;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+      padding: 6px 10px; font-size: 13px; font-weight: 700;
+      background: #00c4ff; border-bottom: 2px solid #b8ff3c;
+      display: flex; align-items: center; justify-content: space-between;
     }
     .panel-header span.sub { font-size: 11px; font-weight: 400; opacity: 0.9; }
     .panel-body { padding: 12px; font-size: 13px; }
 
-    /* 갤러리 레이아웃 */
-    .gallery-layout {
-      display: grid;
-      grid-template-columns: 200px minmax(0, 1fr);
-      gap: 16px;
-    }
-    @media (max-width: 700px) {
-      .gallery-layout { grid-template-columns: 1fr; }
-    }
+    .gallery-layout { display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: 16px; }
+    @media (max-width: 700px) { .gallery-layout { grid-template-columns: 1fr; } }
 
-    /* 폴더 리스트 */
     .folder-list { display: flex; flex-direction: column; gap: 8px; }
     @media (max-width: 700px) {
       .folder-list { flex-direction: row; overflow-x: auto; gap: 6px; padding-bottom: 4px; }
     }
     .folder-item {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 10px 12px;
-      border-radius: 8px;
-      background: #111;
-      border: 1px solid #3c3c3c;
-      cursor: pointer;
-      flex-shrink: 0;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 12px; border-radius: 8px; background: #111;
+      border: 1px solid #3c3c3c; cursor: pointer; flex-shrink: 0;
     }
     .folder-item:hover { border-color: #fffc6e; background: #181818; }
     .folder-item.active { border-color: #b8ff3c; background: #202020; }
@@ -103,14 +73,48 @@
     .folder-name span.sub { font-size: 11px; color: #aaa; margin-left: 4px; }
     .folder-count { font-size: 11px; color: #bbb; margin-left: 8px; }
 
-    /* 업로드 */
+    /* 업로드 영역 */
     .upload-area { margin-top: 12px; padding: 10px; border-radius: 8px; background: #111; border: 1px dashed #ff2df3; }
     .upload-area.hidden { display: none; }
     .upload-title { font-size: 11px; color: #ff2df3; font-weight: 700; margin-bottom: 8px; }
-    .folder-select { width: 100%; padding: 5px 8px; border-radius: 6px; border: 1px solid #3c3c3c; background: #000; color: #fff; font-size: 12px; margin-bottom: 6px; }
-    .upload-btn { width: 100%; padding: 6px; border-radius: 6px; background: #ff2df3; border: none; color: #fff; font-size: 12px; cursor: pointer; font-weight: 600; }
+    .folder-select { width: 100%; padding: 5px 8px; border-radius: 6px; border: 1px solid #3c3c3c; background: #000; color: #fff; font-size: 12px; margin-bottom: 8px; }
+
+    /* 업로드 탭 */
+    .upload-tabs { display: flex; gap: 4px; margin-bottom: 8px; }
+    .upload-tab {
+      flex: 1; padding: 4px 6px; border-radius: 6px;
+      border: 1px solid #3c3c3c; background: #000; color: #666;
+      font-size: 10px; cursor: pointer; text-align: center;
+    }
+    .upload-tab.active { border-color: #ff2df3; color: #ff2df3; background: rgba(255,45,243,0.1); }
+    .upload-panel { display: none; }
+    .upload-panel.active { display: block; }
+
+    .upload-btn {
+      width: 100%; padding: 6px; border-radius: 6px; background: #ff2df3;
+      border: none; color: #fff; font-size: 12px; cursor: pointer; font-weight: 600;
+    }
     .upload-btn:hover { filter: brightness(1.1); }
     .upload-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    /* URL 입력 */
+    .url-row { display: flex; gap: 6px; margin-bottom: 6px; }
+    .url-input-gallery {
+      flex: 1; padding: 5px 8px; border-radius: 6px;
+      border: 1px solid #3c3c3c; background: #000; color: #fff;
+      font-size: 11px; min-width: 0;
+    }
+    .url-input-gallery::placeholder { color: #555; }
+    .url-caption-input {
+      width: 100%; padding: 5px 8px; border-radius: 6px;
+      border: 1px solid #3c3c3c; background: #000; color: #fff;
+      font-size: 11px; margin-bottom: 6px;
+    }
+    .url-caption-input::placeholder { color: #555; }
+    .url-add-btn {
+      padding: 5px 10px; border-radius: 6px; background: #ff2df3;
+      border: none; color: #fff; font-size: 11px; cursor: pointer; white-space: nowrap;
+    }
 
     .admin-toggle { margin-top: 8px; font-size: 11px; color: #666; cursor: pointer; text-align: center; }
     .admin-toggle:hover { color: #aaa; }
@@ -118,7 +122,6 @@
     .admin-login input { width: 100%; padding: 5px 8px; border-radius: 6px; border: 1px solid #3c3c3c; background: #000; color: #fff; font-size: 12px; margin-bottom: 6px; }
     .admin-login button { width: 100%; padding: 5px; border-radius: 6px; background: #333; border: 1px solid #666; color: #fff; font-size: 12px; cursor: pointer; }
 
-    /* 앨범/그리드 */
     .right-area { min-height: 200px; }
     #albumView { display: block; }
     .album-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 12px; }
@@ -140,10 +143,10 @@
     .delete-btn {
       position: absolute; top: 4px; right: 4px;
       background: rgba(0,0,0,0.7); border: none; color: #ff4444;
-      font-size: 14px; border-radius: 50%;
-      width: 22px; height: 22px; cursor: pointer;
-      align-items: center; justify-content: center; line-height: 1;
+      font-size: 14px; border-radius: 50%; width: 22px; height: 22px;
+      cursor: pointer; align-items: center; justify-content: center; line-height: 1;
     }
+    .upload-status { font-size: 11px; color: #aaa; margin-top: 4px; }
     .loading { text-align: center; font-size: 12px; color: #666; padding: 40px; }
   </style>
 </head>
@@ -188,16 +191,37 @@
               <input type="password" id="adminPw" placeholder="비밀번호" />
               <button onclick="checkAdmin()">확인</button>
             </div>
+
             <div class="upload-area hidden" id="uploadArea">
-              <div class="upload-title">📸 사진 업로드</div>
+              <div class="upload-title">📸 사진 추가</div>
               <select class="folder-select" id="uploadFolder">
                 <option value="all">All</option>
                 <option value="favorite">Favorite</option>
                 <option value="me">Me</option>
               </select>
-              <input type="file" id="fileInput" accept="image/*, .gif" multiple style="display:none" />
-              <button class="upload-btn" onclick="document.getElementById('fileInput').click()">사진 선택</button>
-              <div id="uploadStatus" style="font-size:11px;color:#aaa;margin-top:4px;"></div>
+
+              <!-- 탭 -->
+              <div class="upload-tabs">
+                <div class="upload-tab active" onclick="switchUploadTab('file')">📁 파일</div>
+                <div class="upload-tab" onclick="switchUploadTab('url')">🔗 URL</div>
+              </div>
+
+              <!-- 파일 업로드 패널 -->
+              <div class="upload-panel active" id="upanel-file">
+                <input type="file" id="fileInput" accept="image/*, .gif" multiple style="display:none" />
+                <button class="upload-btn" onclick="document.getElementById('fileInput').click()">사진 선택</button>
+              </div>
+
+              <!-- URL 입력 패널 -->
+              <div class="upload-panel" id="upanel-url">
+                <div class="url-row">
+                  <input type="text" class="url-input-gallery" id="urlInput" placeholder="https://example.com/image.jpg" />
+                </div>
+                <input type="text" class="url-caption-input" id="urlCaption" placeholder="캡션 (선택)" />
+                <button class="upload-btn" onclick="addUrlImage()">추가하기</button>
+              </div>
+
+              <div class="upload-status" id="uploadStatus"></div>
             </div>
           </aside>
 
@@ -251,15 +275,32 @@
 
     let isAdmin = false, currentFolder = null;
     let folderImages = { all: [], favorite: [], me: [] };
+    let urlImages = { all: [], favorite: [], me: [] };
+
+    // 탭 전환
+    function switchUploadTab(tab) {
+      document.querySelectorAll('.upload-tab').forEach((t, i) => {
+        t.classList.toggle('active', (i === 0 && tab === 'file') || (i === 1 && tab === 'url'));
+      });
+      document.getElementById('upanel-file').classList.toggle('active', tab === 'file');
+      document.getElementById('upanel-url').classList.toggle('active', tab === 'url');
+    }
 
     async function loadAllFolders() {
       for (const folder of Object.keys(FOLDERS)) {
-        const imgs = await loadFolder(folder);
+        const [imgs, urls] = await Promise.all([loadFolder(folder), loadUrlImages(folder)]);
         folderImages[folder] = imgs;
-        document.getElementById('count-' + folder).textContent = imgs.length + ' pics';
-        if (imgs.length > 0) {
+        urlImages[folder] = urls;
+        const total = imgs.length + urls.length;
+        document.getElementById('count-' + folder).textContent = total + ' pics';
+        const firstImg = imgs[0] || urls[0];
+        if (firstImg) {
           const thumb = document.getElementById('thumb-' + folder);
-          if (thumb) { thumb.style.backgroundImage = `url(${imgs[0].url})`; thumb.style.backgroundSize = 'cover'; thumb.style.backgroundPosition = 'center'; }
+          if (thumb) {
+            thumb.style.backgroundImage = `url(${firstImg.url})`;
+            thumb.style.backgroundSize = 'cover';
+            thumb.style.backgroundPosition = 'center';
+          }
         }
       }
     }
@@ -269,23 +310,24 @@
       if (error || !data) return [];
       return data.filter(f => f.name !== '.emptyFolderPlaceholder').map(f => {
         const { data: urlData } = _supabase.storage.from(BUCKET).getPublicUrl(`${folder}/${f.name}`);
-        return { name: f.name, url: urlData.publicUrl, path: `${folder}/${f.name}` };
+        return { name: f.name, url: urlData.publicUrl, path: `${folder}/${f.name}`, type: 'file' };
       });
     }
 
     function openGrid(folderKey) {
-      const imgs = folderImages[folderKey];
       currentFolder = folderKey;
       document.getElementById('gridTitle').textContent = FOLDERS[folderKey];
-      document.getElementById('gridBadge').textContent = imgs.length + ' pics';
+      const allImgs = [...folderImages[folderKey], ...(urlImages[folderKey] || [])];
+      document.getElementById('gridBadge').textContent = allImgs.length + ' pics';
       const grid = document.getElementById('imageGrid');
-      grid.innerHTML = imgs.length === 0
+      grid.innerHTML = allImgs.length === 0
         ? '<div class="loading">사진이 없어요 📷</div>'
-        : imgs.map(img => `
+        : allImgs.map((img, idx) => `
             <div class="image-item">
               <img src="${img.url}" alt="${img.name}" loading="lazy">
-              <div class="image-caption">${img.name}</div>
-              <button class="delete-btn" style="display:${isAdmin ? 'flex' : 'none'}" onclick="deleteImage('${img.path}', '${folderKey}')">✕</button>
+              <div class="image-caption">${img.caption || img.name}</div>
+              <button class="delete-btn" style="display:${isAdmin ? 'flex' : 'none'}"
+                onclick="deleteImage('${img.path || ''}', '${folderKey}', ${idx}, '${img.type || 'file'}')">✕</button>
             </div>`).join('');
       document.getElementById('albumView').style.display = 'none';
       document.getElementById('gridView').style.display = 'flex';
@@ -314,33 +356,102 @@
       } else { alert('비밀번호가 틀렸어요!'); }
     }
 
+    // 파일 업로드
     document.getElementById('fileInput').addEventListener('change', async (e) => {
       const files = Array.from(e.target.files);
       if (!files.length) return;
       const folder = document.getElementById('uploadFolder').value;
       const status = document.getElementById('uploadStatus');
-      const btn = document.querySelector('.upload-btn');
+      const btn = document.querySelector('#upanel-file .upload-btn');
       btn.disabled = true;
       status.textContent = `업로드 중... (0/${files.length})`;
       for (let i = 0; i < files.length; i++) {
         const file = files[i];
-        const { error } = await _supabase.storage.from(BUCKET).upload(`${folder}/${Date.now()}_${file.name}`, file);
+        const ext = file.name.split('.').pop();
+        const fileName = Date.now() + '.' + ext;
+        const { error } = await _supabase.storage.from(BUCKET).upload(`${folder}/${fileName}`, file);
         status.textContent = error ? `❌ ${file.name} 실패` : `업로드 중... (${i+1}/${files.length})`;
       }
       status.textContent = '✅ 업로드 완료!';
       btn.disabled = false;
       e.target.value = '';
       folderImages[folder] = await loadFolder(folder);
-      document.getElementById('count-' + folder).textContent = folderImages[folder].length + ' pics';
+      document.getElementById('count-' + folder).textContent =
+        (folderImages[folder].length + (urlImages[folder] || []).length) + ' pics';
       if (currentFolder === folder) openGrid(folder);
     });
 
-    async function deleteImage(path, folder) {
+    // URL 이미지 불러오기
+    async function loadUrlImages(folder) {
+      const { data, error } = await _supabase
+        .from('gallery_urls')
+        .select('*')
+        .eq('folder', folder)
+        .order('created_at', { ascending: false });
+      if (error || !data) return [];
+      return data.map(d => ({
+        id: d.id, url: d.url,
+        name: d.caption || d.url.split('/').pop(),
+        caption: d.caption, type: 'url'
+      }));
+    }
+
+    // URL 이미지 추가
+    async function addUrlImage() {
+      const url = document.getElementById('urlInput').value.trim();
+      const caption = document.getElementById('urlCaption').value.trim();
+      const folder = document.getElementById('uploadFolder').value;
+      const status = document.getElementById('uploadStatus');
+      const btn = document.querySelector('#upanel-url .upload-btn');
+
+      if (!url) { status.textContent = '❌ URL을 입력해줘요!'; return; }
+
+      btn.disabled = true;
+      status.textContent = '저장 중...';
+
+      const { error } = await _supabase.from('gallery_urls').insert({ folder, url, caption });
+      if (error) { status.textContent = '❌ 저장 실패 😢'; btn.disabled = false; return; }
+
+      document.getElementById('urlInput').value = '';
+      document.getElementById('urlCaption').value = '';
+      status.textContent = '✅ 추가됐어요!';
+      btn.disabled = false;
+
+      urlImages[folder] = await loadUrlImages(folder);
+      document.getElementById('count-' + folder).textContent =
+        (folderImages[folder].length + urlImages[folder].length) + ' pics';
+
+      // 썸네일 업데이트
+      const thumb = document.getElementById('thumb-' + folder);
+      if (thumb && folderImages[folder].length === 0 && urlImages[folder].length > 0) {
+        thumb.style.backgroundImage = `url(${urlImages[folder][0].url})`;
+        thumb.style.backgroundSize = 'cover';
+        thumb.style.backgroundPosition = 'center';
+      }
+
+      if (currentFolder === folder) openGrid(folder);
+    }
+
+    // 삭제
+    async function deleteImage(path, folder, idx, type) {
       if (!confirm('이 사진을 삭제할까요?')) return;
+      if (type === 'url') {
+        const fileCount = folderImages[folder].length;
+        const urlItem = urlImages[folder][idx - fileCount];
+        if (urlItem) {
+          await _supabase.from('gallery_urls').delete().eq('id', urlItem.id);
+        }
+        urlImages[folder] = await loadUrlImages(folder);
+        document.getElementById('count-' + folder).textContent =
+          (folderImages[folder].length + urlImages[folder].length) + ' pics';
+        openGrid(folder);
+        return;
+      }
       const { error } = await _supabase.storage.from(BUCKET).remove([path]);
       if (error) { alert('삭제 실패 😢'); return; }
       folderImages[folder] = await loadFolder(folder);
-      document.getElementById('count-' + folder).textContent = folderImages[folder].length + ' pics';
+      document.getElementById('count-' + folder).textContent =
+        (folderImages[folder].length + (urlImages[folder] || []).length) + ' pics';
       openGrid(folder);
     }
 
