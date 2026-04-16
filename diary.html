@@ -70,7 +70,6 @@
     .panel-header span.sub { font-size: 11px; font-weight: 400; }
     .panel-body { padding: 14px 14px 18px; font-size: 13px; }
 
-    /* 글쓰기 폼 */
     .entry-form {
       margin-bottom: 18px;
       padding: 10px 12px;
@@ -102,7 +101,30 @@
       resize: vertical;
       margin-bottom: 8px;
     }
-    .entry-form-actions { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
+
+    /* 사진 탭 */
+    .photo-tabs {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+    .photo-tab {
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid #3c3c3c;
+      background: #000;
+      color: #666;
+      font-size: 11px;
+      cursor: pointer;
+    }
+    .photo-tab.active {
+      border-color: #7df9ff;
+      color: #7df9ff;
+      background: rgba(125,249,255,0.1);
+    }
+    .photo-panel { display: none; }
+    .photo-panel.active { display: block; }
+
     .photo-label {
       display: inline-flex;
       align-items: center;
@@ -115,15 +137,55 @@
       cursor: pointer;
     }
     .photo-label:hover { background: rgba(125,249,255,0.1); }
+
+    .url-row {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+    .url-input {
+      flex: 1;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid #3c3c3c;
+      background: #000;
+      color: #fff;
+      font-size: 12px;
+      min-width: 0;
+    }
+    .url-input::placeholder { color: #555; }
+    .url-preview-btn {
+      padding: 5px 10px;
+      border-radius: 999px;
+      border: 1px solid #7df9ff;
+      background: transparent;
+      color: #7df9ff;
+      font-size: 11px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .url-preview-btn:hover { background: rgba(125,249,255,0.1); }
+
     .preview-img {
       width: 100%;
       max-height: 180px;
       object-fit: cover;
       border-radius: 8px;
       border: 2px solid #b8ff3c;
+      margin-top: 8px;
+      margin-bottom: 4px;
+      display: none;
+    }
+    .preview-clear {
+      font-size: 10px;
+      color: #ff4444;
+      cursor: pointer;
       margin-bottom: 8px;
       display: none;
     }
+    .preview-clear:hover { text-decoration: underline; }
+
+    .entry-form-actions { display: flex; justify-content: flex-end; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
     .btn-save {
       padding: 5px 12px;
       border-radius: 999px;
@@ -136,140 +198,62 @@
     .btn-save:hover { filter: brightness(1.05); }
     .btn-save:disabled { opacity: 0.5; cursor: not-allowed; }
 
-    /* 관리자 토글 */
-    .admin-toggle-diary {
-      font-size: 11px;
-      color: #666;
-      cursor: pointer;
-      text-align: right;
-      margin-bottom: 10px;
-    }
+    .admin-toggle-diary { font-size: 11px; color: #666; cursor: pointer; text-align: right; margin-bottom: 10px; }
     .admin-toggle-diary:hover { color: #aaa; }
-    .admin-login-diary { display: none; margin-bottom: 10px; display: none; gap: 6px; }
+    .admin-login-diary { display: none; margin-bottom: 10px; gap: 6px; }
     .admin-login-diary input {
-      flex: 1;
-      padding: 5px 8px;
-      border-radius: 6px;
-      border: 1px solid #3c3c3c;
-      background: #000;
-      color: #fff;
-      font-size: 12px;
+      flex: 1; padding: 5px 8px; border-radius: 6px;
+      border: 1px solid #3c3c3c; background: #000; color: #fff; font-size: 12px;
     }
     .admin-login-diary button {
-      padding: 5px 10px;
-      border-radius: 6px;
-      background: #333;
-      border: 1px solid #666;
-      color: #fff;
-      font-size: 12px;
-      cursor: pointer;
+      padding: 5px 10px; border-radius: 6px; background: #333;
+      border: 1px solid #666; color: #fff; font-size: 12px; cursor: pointer;
     }
 
-    /* 엔트리 */
     .entries { position: relative; padding-left: 24px; }
     .entries::before {
-      content: "";
-      position: absolute;
-      left: 8px; top: 0; bottom: 0;
-      width: 2px;
-      background: linear-gradient(#fffc6e, #ff2df3);
-      opacity: 0.8;
+      content: ""; position: absolute; left: 8px; top: 0; bottom: 0;
+      width: 2px; background: linear-gradient(#fffc6e, #ff2df3); opacity: 0.8;
     }
     .entry {
-      position: relative;
-      margin-bottom: 14px;
-      padding: 10px 12px;
-      border-radius: 10px;
-      background: #111;
-      border: 1px solid #3c3c3c;
+      position: relative; margin-bottom: 14px; padding: 10px 12px;
+      border-radius: 10px; background: #111; border: 1px solid #3c3c3c;
     }
     .entry::before {
-      content: "";
-      position: absolute;
-      left: -18px; top: 14px;
-      width: 10px; height: 10px;
-      border-radius: 50%;
-      border: 2px solid #fffc6e;
-      background: #000;
-      box-shadow: 0 0 6px #fffc6e;
+      content: ""; position: absolute; left: -18px; top: 14px;
+      width: 10px; height: 10px; border-radius: 50%;
+      border: 2px solid #fffc6e; background: #000; box-shadow: 0 0 6px #fffc6e;
     }
-    .entry-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 6px;
-      gap: 8px;
-    }
+    .entry-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px; gap: 8px; }
     .entry-title { font-weight: 700; font-size: 13px; }
     .entry-date { font-size: 11px; color: #fffc6e; margin-top: 2px; }
     .entry-actions { display: none; gap: 4px; flex-shrink: 0; }
     .entry-actions.visible { display: flex; }
-    .btn-edit, .btn-delete {
-      padding: 3px 8px;
-      border-radius: 999px;
-      font-size: 11px;
-      cursor: pointer;
-      border: none;
-    }
+    .btn-edit, .btn-delete { padding: 3px 8px; border-radius: 999px; font-size: 11px; cursor: pointer; border: none; }
     .btn-edit { background: #7df9ff; color: #000; }
     .btn-delete { background: #ff4444; color: #fff; }
 
     .entry-image {
-      width: 100%;
-      max-height: 300px;
-      object-fit: cover;
-      border-radius: 8px;
-      border: 2px solid #b8ff3c;
-      margin: 6px 0;
-      cursor: zoom-in;
+      width: 100%; max-height: 300px; object-fit: cover;
+      border-radius: 8px; border: 2px solid #b8ff3c; margin: 6px 0; cursor: zoom-in;
     }
     .entry-body { font-size: 13px; line-height: 1.6; white-space: pre-wrap; margin-top: 4px; }
     .loading { text-align: center; font-size: 12px; color: #666; padding: 20px; }
 
-    /* 수정 폼 */
     .edit-form { margin-top: 8px; display: none; }
     .edit-form input, .edit-form textarea {
-      width: 100%;
-      padding: 6px 8px;
-      border-radius: 8px;
-      border: 1px solid #3c3c3c;
-      background: #000;
-      color: #fff;
-      font-size: 13px;
-      margin-bottom: 6px;
+      width: 100%; padding: 6px 8px; border-radius: 8px;
+      border: 1px solid #3c3c3c; background: #000; color: #fff; font-size: 13px; margin-bottom: 6px;
     }
     .edit-form textarea { min-height: 60px; resize: vertical; }
     .edit-actions { display: flex; gap: 6px; justify-content: flex-end; }
     .btn-confirm { padding: 4px 10px; border-radius: 999px; background: #ff2df3; border: none; color: #fff; font-size: 11px; cursor: pointer; }
     .btn-cancel { padding: 4px 10px; border-radius: 999px; background: #333; border: 1px solid #666; color: #fff; font-size: 11px; cursor: pointer; }
 
-    /* 라이트박스 */
-    .lightbox {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.92);
-      z-index: 9999;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
+    .lightbox { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.92); z-index: 9999; align-items: center; justify-content: center; padding: 20px; }
     .lightbox.open { display: flex; }
-    .lightbox img {
-      max-width: 100%;
-      max-height: 90vh;
-      border-radius: 8px;
-      border: 2px solid #b8ff3c;
-      object-fit: contain;
-    }
-    .lightbox-close {
-      position: absolute;
-      top: 16px; right: 20px;
-      font-size: 28px;
-      cursor: pointer;
-      color: #fff;
-      line-height: 1;
-    }
+    .lightbox img { max-width: 100%; max-height: 90vh; border-radius: 8px; border: 2px solid #b8ff3c; object-fit: contain; }
+    .lightbox-close { position: absolute; top: 16px; right: 20px; font-size: 28px; cursor: pointer; color: #fff; line-height: 1; }
 
     @media (max-width: 600px) {
       .panel-body { padding: 10px; }
@@ -299,29 +283,48 @@
         <span class="sub">★</span>
       </div>
       <div class="panel-body">
-        <!-- 글쓰기 폼 -->
         <div class="entry-form">
           <div class="entry-form-title">새 글 쓰기</div>
           <div class="entry-form-row">
             <input type="text" id="entryTitle" placeholder="제목을 입력해 주세요." />
           </div>
           <textarea id="entryBody" placeholder="내용을 입력해 주세요."></textarea>
+
+          <!-- 사진 탭 -->
+          <div class="photo-tabs">
+            <button class="photo-tab active" onclick="switchTab('file')">📁 파일 업로드</button>
+            <button class="photo-tab" onclick="switchTab('url')">🔗 URL 입력</button>
+          </div>
+
+          <!-- 파일 업로드 패널 -->
+          <div class="photo-panel active" id="panel-file">
+            <input type="file" id="photoInput" accept="image/*" style="display:none" onchange="previewPhoto('file')" />
+            <label class="photo-label" for="photoInput">📷 사진 선택</label>
+          </div>
+
+          <!-- URL 입력 패널 -->
+          <div class="photo-panel" id="panel-url">
+            <div class="url-row">
+              <input type="text" class="url-input" id="photoUrl" placeholder="https://example.com/image.jpg" />
+              <button class="url-preview-btn" onclick="previewPhoto('url')">미리보기</button>
+            </div>
+          </div>
+
+          <!-- 공통 미리보기 -->
           <img id="previewImg" class="preview-img" />
-          <input type="file" id="photoInput" accept="image/*" style="display:none" onchange="previewPhoto()" />
+          <div class="preview-clear" id="previewClear" onclick="clearPreview()">✕ 사진 제거</div>
+
           <div class="entry-form-actions">
-            <label class="photo-label" for="photoInput">📷 사진 추가</label>
             <button class="btn-save" id="saveBtn" onclick="submitEntry()">작성하기</button>
           </div>
         </div>
 
-        <!-- 관리자 토글 -->
         <div class="admin-toggle-diary" onclick="toggleDiaryAdmin()">🔒 관리자</div>
         <div class="admin-login-diary" id="diaryAdminLogin">
           <input type="password" id="diaryAdminPw" placeholder="비밀번호" />
           <button onclick="checkDiaryAdmin()">확인</button>
         </div>
 
-        <!-- 글 목록 -->
         <div class="entries" id="entries">
           <div class="loading">불러오는 중...</div>
         </div>
@@ -329,7 +332,6 @@
     </section>
   </div>
 
-  <!-- 라이트박스 -->
   <div class="lightbox" id="lightbox" onclick="closeLightbox()">
     <span class="lightbox-close">✕</span>
     <img id="lightboxImg" src="" />
@@ -344,13 +346,51 @@
 
     const ADMIN_PASSWORD = '013000';
     let isAdmin = false;
+    let currentTab = 'file';
 
-    // 관리자 토글
+    // 탭 전환
+    function switchTab(tab) {
+      currentTab = tab;
+      document.querySelectorAll('.photo-tab').forEach((t, i) => {
+        t.classList.toggle('active', (i === 0 && tab === 'file') || (i === 1 && tab === 'url'));
+      });
+      document.getElementById('panel-file').classList.toggle('active', tab === 'file');
+      document.getElementById('panel-url').classList.toggle('active', tab === 'url');
+      clearPreview();
+    }
+
+    // 미리보기
+    function previewPhoto(type) {
+      const preview = document.getElementById('previewImg');
+      const clear = document.getElementById('previewClear');
+      if (type === 'file') {
+        const file = document.getElementById('photoInput').files[0];
+        if (!file) return;
+        preview.src = URL.createObjectURL(file);
+      } else {
+        const url = document.getElementById('photoUrl').value.trim();
+        if (!url) return;
+        preview.src = url;
+      }
+      preview.style.display = 'block';
+      clear.style.display = 'block';
+    }
+
+    function clearPreview() {
+      const preview = document.getElementById('previewImg');
+      const clear = document.getElementById('previewClear');
+      preview.src = '';
+      preview.style.display = 'none';
+      clear.style.display = 'none';
+      document.getElementById('photoInput').value = '';
+      document.getElementById('photoUrl').value = '';
+    }
+
+    // 관리자
     function toggleDiaryAdmin() {
       const el = document.getElementById('diaryAdminLogin');
       el.style.display = el.style.display === 'flex' ? 'none' : 'flex';
     }
-
     function checkDiaryAdmin() {
       if (document.getElementById('diaryAdminPw').value === ADMIN_PASSWORD) {
         isAdmin = true;
@@ -358,15 +398,6 @@
         document.querySelector('.admin-toggle-diary').textContent = '✅ 관리자 모드';
         loadEntries();
       } else { alert('비밀번호가 틀렸어요!'); }
-    }
-
-    // 사진 미리보기
-    function previewPhoto() {
-      const file = document.getElementById('photoInput').files[0];
-      if (!file) return;
-      const preview = document.getElementById('previewImg');
-      preview.src = URL.createObjectURL(file);
-      preview.style.display = 'block';
     }
 
     // 라이트박스
@@ -379,13 +410,12 @@
     }
     document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
 
-    // 글 목록 불러오기
+    // 글 목록
     async function loadEntries() {
       const { data, error } = await _supabase.from('diary').select('*').order('created_at', { ascending: false });
       const el = document.getElementById('entries');
       if (error) { el.innerHTML = '<div class="loading">불러오기 실패 😢</div>'; return; }
       if (data.length === 0) { el.innerHTML = '<div class="loading">작성된 글이 존재하지 않습니다.</div>'; return; }
-
       el.innerHTML = data.map(e => {
         const date = new Date(e.created_at);
         const dateText = date.getFullYear() + '-' + String(date.getMonth()+1).padStart(2,'0') + '-' +
@@ -417,13 +447,11 @@
       }).join('');
     }
 
-    // 수정 폼 토글
     function toggleEdit(id) {
       const form = document.getElementById('edit-' + id);
       form.style.display = form.style.display === 'block' ? 'none' : 'block';
     }
 
-    // 글 수정
     async function updateEntry(id) {
       const title = document.getElementById('edit-title-' + id).value.trim() || '제목 없음';
       const content = document.getElementById('edit-content-' + id).value.trim();
@@ -433,10 +461,9 @@
       loadEntries();
     }
 
-    // 글 삭제
     async function deleteEntry(id, imageUrl) {
       if (!confirm('이 글을 삭제할까요?')) return;
-      if (imageUrl) {
+      if (imageUrl && !imageUrl.startsWith('http')) {
         const fileName = imageUrl.split('/').pop();
         await _supabase.storage.from('diary').remove([fileName]);
       }
@@ -449,20 +476,26 @@
     async function submitEntry() {
       const title = document.getElementById('entryTitle').value.trim() || '제목 없음';
       const content = document.getElementById('entryBody').value.trim();
-      const file = document.getElementById('photoInput').files[0];
       const btn = document.getElementById('saveBtn');
-
       if (!content) return alert('내용을 입력해줘요!');
+
       btn.disabled = true; btn.textContent = '저장 중...';
 
       let image_url = null;
-      if (file) {
-        const ext = file.name.split('.').pop();
-        const fileName = Date.now() + '.' + ext;
-        const { error: upErr } = await _supabase.storage.from('diary').upload(fileName, file);
-        if (upErr) { alert('사진 업로드 실패 😢'); btn.disabled = false; btn.textContent = '작성하기'; return; }
-        const { data: urlData } = _supabase.storage.from('diary').getPublicUrl(fileName);
-        image_url = urlData.publicUrl;
+
+      if (currentTab === 'file') {
+        const file = document.getElementById('photoInput').files[0];
+        if (file) {
+          const ext = file.name.split('.').pop();
+          const fileName = Date.now() + '.' + ext;
+          const { error: upErr } = await _supabase.storage.from('diary').upload(fileName, file);
+          if (upErr) { alert('사진 업로드 실패 😢'); btn.disabled = false; btn.textContent = '작성하기'; return; }
+          const { data: urlData } = _supabase.storage.from('diary').getPublicUrl(fileName);
+          image_url = urlData.publicUrl;
+        }
+      } else {
+        const url = document.getElementById('photoUrl').value.trim();
+        if (url) image_url = url;
       }
 
       const { error } = await _supabase.from('diary').insert({ title, content, image_url });
@@ -470,8 +503,7 @@
       else {
         document.getElementById('entryTitle').value = '';
         document.getElementById('entryBody').value = '';
-        document.getElementById('photoInput').value = '';
-        document.getElementById('previewImg').style.display = 'none';
+        clearPreview();
         loadEntries();
       }
       btn.disabled = false; btn.textContent = '작성하기';

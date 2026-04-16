@@ -47,7 +47,7 @@
     }
 
     .game-wrap {
-      background: rgba(0,0,0,0.85);
+      background: rgba(0,0,0,0.9);
       border: 2px solid #b8ff3c;
       border-radius: 14px;
       overflow: hidden;
@@ -69,7 +69,6 @@
     #gameCanvas {
       display: block;
       width: 100%;
-      background: #000;
       touch-action: none;
     }
 
@@ -120,33 +119,24 @@
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
 
-    // 캔버스 크기 반응형
     function resizeCanvas() {
       const w = canvas.parentElement.clientWidth - 4;
       canvas.width = w;
       canvas.height = Math.min(w, 500);
     }
     resizeCanvas();
-    window.addEventListener('resize', () => { resizeCanvas(); });
+    window.addEventListener('resize', resizeCanvas);
 
     const W = () => canvas.width;
     const H = () => canvas.height;
 
-    let player, poops, score, bestScore, gameRunning, animId, speed, frameCount;
-
-    bestScore = 0;
+    let player, poops, score, bestScore = 0, gameRunning, animId, speed, frameCount;
 
     function initGame() {
-      player = {
-        x: W() / 2,
-        y: H() - 60,
-        size: 36,
-        speed: 7,
-        moving: 0
-      };
+      player = { x: W()/2, y: H()-60, size: 36, speed: 7, moving: 0 };
       poops = [];
       score = 0;
-      speed = 2.5;
+      speed = 3;
       frameCount = 0;
       gameRunning = true;
     }
@@ -156,38 +146,38 @@
         x: Math.random() * (W() - 30) + 15,
         y: -30,
         size: 28 + Math.random() * 14,
-        speed: speed + Math.random() * 1.5
+        speed: speed + Math.random() * 2
       });
     }
 
     function update() {
       if (!gameRunning) return;
-
       frameCount++;
       score = Math.floor(frameCount / 6);
       document.getElementById('scoreDisplay').textContent = '점수: ' + score;
 
-      // 난이도 상승
-      speed = 2.5 + frameCount / 400;
+      // 난이도 빠르게 상승
+      speed = 3 + frameCount / 150;
 
-      // 똥 생성
-      const spawnRate = Math.max(30, 70 - Math.floor(frameCount / 100));
+      // 똥 생성 - 갈수록 미친듯이 쏟아짐
+      const spawnRate = Math.max(6, 55 - Math.floor(frameCount / 30));
       if (frameCount % spawnRate === 0) spawnPoop();
 
-      // 플레이어 이동
+      // 100프레임 넘으면 가끔 2개 동시에
+      if (frameCount > 100 && frameCount % (spawnRate * 3) === 0) spawnPoop();
+
+      // 200프레임 넘으면 가끔 3개 동시에
+      if (frameCount > 200 && frameCount % (spawnRate * 5) === 0) spawnPoop();
+
       player.x += player.moving * player.speed;
       player.x = Math.max(player.size/2, Math.min(W() - player.size/2, player.x));
 
-      // 똥 이동
       for (let i = poops.length - 1; i >= 0; i--) {
         poops[i].y += poops[i].speed;
         if (poops[i].y > H() + 30) { poops.splice(i, 1); continue; }
-
-        // 충돌 체크
         const dx = poops[i].x - player.x;
         const dy = poops[i].y - player.y;
-        const dist = Math.sqrt(dx*dx + dy*dy);
-        if (dist < (player.size/2 + poops[i].size/2) * 0.65) {
+        if (Math.sqrt(dx*dx + dy*dy) < (player.size/2 + poops[i].size/2) * 0.65) {
           gameOver(); return;
         }
       }
@@ -196,60 +186,80 @@
     function draw() {
       ctx.clearRect(0, 0, W(), H());
 
-      // 배경
-      ctx.fillStyle = '#050510';
+      // 밝은 배경
+      ctx.fillStyle = '#1a0a2e';
       ctx.fillRect(0, 0, W(), H());
 
-      // 별 배경
-      ctx.fillStyle = 'rgba(255,255,255,0.3)';
-      for (let i = 0; i < 30; i++) {
+      // 별 (밝게)
+      ctx.fillStyle = 'rgba(255,255,255,0.8)';
+      for (let i = 0; i < 40; i++) {
         const sx = ((i * 137 + frameCount * 0.2) % W());
         const sy = ((i * 97) % H());
-        ctx.fillRect(sx, sy, 1.5, 1.5);
+        ctx.fillRect(sx, sy, 2, 2);
       }
 
-      // 플레이어
-      ctx.font = player.size + 'px serif';
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillText('👼🏻', player.x, player.y);
+      // 바닥 라인
+      ctx.strokeStyle = 'rgba(184,255,60,0.4)';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(0, H() - 30);
+      ctx.lineTo(W(), H() - 30);
+      ctx.stroke();
 
-      // 똥
-      for (const p of poops) {
-        ctx.font = p.size + 'px serif';
-        ctx.fillText('💩', p.x, p.y);
-      }
-
-      // 게임 오버 화면
-      if (!gameRunning && frameCount > 0) {
-        ctx.fillStyle = 'rgba(0,0,0,0.7)';
-        ctx.fillRect(0, 0, W(), H());
-        ctx.fillStyle = '#fff';
-        ctx.font = 'bold 22px system-ui';
+      if (gameRunning) {
+        // 플레이어
+        ctx.font = player.size + 'px serif';
         ctx.textAlign = 'center';
-        ctx.fillText('💩 Game Over 💩', W()/2, H()/2 - 30);
-        ctx.font = '16px system-ui';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('👼🏻', player.x, player.y);
+
+        // 똥
+        for (const p of poops) {
+          ctx.font = p.size + 'px serif';
+          ctx.fillText('💩', p.x, p.y);
+        }
+
+        // 점수 표시 (게임 중)
+        ctx.fillStyle = 'rgba(255,252,110,0.6)';
+        ctx.font = 'bold 12px system-ui';
+        ctx.textAlign = 'left';
+        ctx.fillText('SCORE: ' + score, 10, 20);
+      }
+
+      // 게임 오버
+      if (!gameRunning && frameCount > 0) {
+        // 똥도 보이게
+        for (const p of poops) {
+          ctx.font = p.size + 'px serif';
+          ctx.textAlign = 'center';
+          ctx.fillText('💩', p.x, p.y);
+        }
+        ctx.fillStyle = 'rgba(0,0,0,0.75)';
+        ctx.fillRect(0, 0, W(), H());
+        ctx.textAlign = 'center';
+        ctx.font = 'bold 24px system-ui';
+        ctx.fillStyle = '#fff';
+        ctx.fillText('💩 Game Over 💩', W()/2, H()/2 - 40);
+        ctx.font = 'bold 18px system-ui';
         ctx.fillStyle = '#fffc6e';
-        ctx.fillText('점수: ' + score, W()/2, H()/2 + 5);
+        ctx.fillText('점수: ' + score, W()/2, H()/2);
         ctx.fillStyle = '#7df9ff';
         ctx.fillText('최고: ' + bestScore, W()/2, H()/2 + 30);
         ctx.fillStyle = '#ff2df3';
         ctx.font = '13px system-ui';
-        ctx.fillText('시작하기 버튼을 눌러 다시 플레이!', W()/2, H()/2 + 60);
+        ctx.fillText('시작하기 버튼을 눌러 다시 플레이!', W()/2, H()/2 + 65);
       }
 
-      // 시작 전 화면
+      // 시작 전
       if (!gameRunning && frameCount === 0) {
-        ctx.fillStyle = 'rgba(0,0,0,0.5)';
-        ctx.fillRect(0, 0, W(), H());
-        ctx.font = '40px serif';
         ctx.textAlign = 'center';
-        ctx.fillText('👼🏻', W()/2, H()/2 - 20);
-        ctx.font = 'bold 16px system-ui';
+        ctx.font = '50px serif';
+        ctx.fillText('👼🏻', W()/2, H()/2 - 30);
+        ctx.font = 'bold 18px system-ui';
         ctx.fillStyle = '#fffc6e';
         ctx.fillText('똥을 피하세요!', W()/2, H()/2 + 20);
-        ctx.font = '12px system-ui';
-        ctx.fillStyle = '#aaa';
+        ctx.font = '13px system-ui';
+        ctx.fillStyle = '#ccc';
         ctx.fillText('← → 키 또는 화면 터치로 이동', W()/2, H()/2 + 50);
       }
     }
@@ -274,29 +284,26 @@
       }
     }
 
-    // 키보드
     document.addEventListener('keydown', e => {
-      if (e.key === 'ArrowLeft') player.moving = -1;
-      if (e.key === 'ArrowRight') player.moving = 1;
+      if (e.key === 'ArrowLeft') player && (player.moving = -1);
+      if (e.key === 'ArrowRight') player && (player.moving = 1);
     });
     document.addEventListener('keyup', e => {
-      if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') player.moving = 0;
+      if ((e.key === 'ArrowLeft' || e.key === 'ArrowRight') && player) player.moving = 0;
     });
 
-    // 터치 (모바일)
     let touchStartX = 0;
-    canvas.addEventListener('touchstart', e => {
-      touchStartX = e.touches[0].clientX;
-    });
+    canvas.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; });
     canvas.addEventListener('touchmove', e => {
       e.preventDefault();
       const dx = e.touches[0].clientX - touchStartX;
-      player.x += dx * 0.4;
-      player.x = Math.max(player.size/2, Math.min(W() - player.size/2, player.x));
+      if (player) {
+        player.x += dx * 0.5;
+        player.x = Math.max(player.size/2, Math.min(W() - player.size/2, player.x));
+      }
       touchStartX = e.touches[0].clientX;
     });
 
-    // 초기 화면
     frameCount = 0;
     gameRunning = false;
     draw();
